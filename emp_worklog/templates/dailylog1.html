@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}DailyLog1{% endblock title %}
+{% block main_content %}
+    <div><center><h1>Glacier's Billable Log</h1></center></div>
+
+    
+           
+    {% comment %} <form method="post">
+        {% csrf_token %}  {% endcomment %}
+        <div class="container">            
+                <table id="example" class="table table-bordered" style="width:100%">
+                    <thead class="table-dark">                
+                        <tr>
+                            <th>SN</th>
+                            <th>User</th>
+                            <th>Date</th>
+                            <th>TaskType</th>
+                            <th>Workdone</th>
+                            <th>Hours</th>
+                            <th>Billable</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in all_data %}
+
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{d.User}}</td>
+                            <td>{{d.Date}}</td>
+                            <td>{{d.TaskType}}</td>
+                            <td>{{d.Workdone}}</td>
+                            <td>{{d.Hours}}</td>
+                            <td>{{d.Billable}}</td>
+                            <td><div>
+                                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter">Edit</button>
+                                <button type="button" class="btn btn-danger">Delete</button>
+                            </div>
+                            </td>
+                        </tr>
+                                                
+                        {% endfor %}
+                    </tbody>
+                </table> 
+                <div class="row">
+                    <div class="col-auto me-auto">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+                        Add New Record</button>
+                    </div>
+                    
+                    <div class="col-auto">
+                        <nav>
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item"><a href="#" class="page-link">Previous</a></li>
+                                <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                <li class="page-item"><a href="#" class="page-link">3</a></li>
+                                <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                            </ul>
+                        </nav>   
+                    </div>
+                </div>
+        </div>
+    {% comment %} </form>     {% endcomment %}
+    
+    <!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <div><h1 class="text-center">Enter Record</h1></div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div> 
+  
+                <form  >
+                    {% csrf_token %}   
+                    <div class="container" id="maindiv123">
+                        <div class="form-group">
+                                <label class="labels">User</label>
+                                <input name="user" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                                <label class="labels">Date</label>
+                                <input name="date" type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                                <label class="labels">TaskType</label>
+                                <select name="tasktype" class="form-control" id="exampleFormControlSelect1">
+                                <option>Select</option>
+                                <option>Issues</option>
+                                <option>Project</option>
+                                <option>Training</option>
+                                <option>Research</option>                              
+                                </select>
+                        </div>
+                        <div class="form-group">
+                                <label class="labels">Workdone</label>
+                                <textarea name="workdone" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                                <label class="labels">Hours</label>
+                                <input name="hours" type="text" class="form-control">
+                        </div>
+                        <div>
+                            <label>Billable</label>&nbsp&nbsp<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        </div>
+                        <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    
+                    </div>
+                </form>
+                 
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock main_content %}

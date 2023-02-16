@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}HomePage{% endblock title %}
+{% block main_content %}
+    <div class="headdiv">
+        <center><h1>Glacier's Employee Management System</h1></center>
+    </div> 
+    <div class="container gap-3" style="display:flex; justify-content:center; ">
+      {% comment %} <center> {% endcomment %}
+      <button type="button" class=" btn btn-success ">Reports</button>
+      {% comment %} <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        DailyLog
+      </button>  {% endcomment %}
+      {% comment %} <a href="dailylog" class=" m-1 btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        DailyLog
+      </a> 
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="billable">Billable</a></li>
+        <li><a class="dropdown-item" href="nonbillable">Non_Billable</a></li>
+      </ul> {% endcomment %}
+      <div class="dropdown">
+        <a href="dailylog"><button class=" btn btn-success dropdown-toggle">Dropdown</button></a>
+        <div class="dropdown-content">
+          <a class="dropdown-item" href="billable">Billable</a>
+          <a class="dropdown-item" href="nonbillable">Non_Billable</a>
+        </div>
+      </div>
+      <button type=" button" class=" btn btn-success">Invoice</button>
+      <button type=" button" class=" btn btn-success">Attendence</button>
+      <button type=" button" class=" btn btn-success">Issue Tracker</button>
+      {% comment %} </center> {% endcomment %}
+    </div>  
+
+    
+  
+{% endblock main_content %}
+
+
