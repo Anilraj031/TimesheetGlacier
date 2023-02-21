@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 # from django.http import HttpResponse
 from .models import worklog,tasktype
+from Project.models import Project, SubProject
 from django.core.paginator import Paginator
 from django.utils import timezone
 from datetime import datetime, date
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -36,22 +38,6 @@ def enterrecord(request):
 def addrecord(request):
     return render(request, 'addrecord.html')
 
-# This is for filter
-# def filter(request):
-#     all_data=worklog.objects.all().order_by('-Date')
-
-#     if request.method=="GET":
-#         username=request.GET.get('searching')
-#         if username!=None:
-#             all_data=worklog.objects.filter(User__icontains=username)
-
-
-#     context= {
-#         'all_data':all_data
-#     }
-#     return render(request, 'dailylog.html', context)
-
-# This is for using read data form database
 def dailylog(request):
     all_data=worklog.objects.all().order_by('-Date')
     task =tasktype.objects.all().values()
@@ -63,7 +49,7 @@ def dailylog(request):
             all_data=worklog.objects.filter(User__icontains=username)
 
     # paginatio
-    paginator=Paginator(all_data,5)
+    paginator=Paginator(all_data,10)
     page_number=request.GET.get('page')
     page_datafinal=paginator.get_page(page_number)
     totalpage=page_datafinal.paginator.num_pages
@@ -83,43 +69,40 @@ def dailylog(request):
 # This is for adding record
 def ADD(request):
     if request.method == "POST":
-        user =request.POST.get('user')
         date =request.POST.get('date')
         tasktype =request.POST.get('tasktype')
+        task_id = request.POST.get('subproject')
         workdone =request.POST.get('workdone')
         hours =int(request.POST.get('hours'))
         billable =request.POST.get('billable')
+        action = request.POST.get('action')
+        id=request.POST.get('id')
 
         if billable == 'on': 
             b1=True 
         else:
             b1=False
-        datas = worklog (
-            User = request.user ,
-            Date = date,
-            TaskType_id = tasktype,
-            Workdone = workdone,
-            Hours = hours,
-            Billable = b1
-        )
-        datas.save()
+        if action == 'update':
+            worklog.objects.filter(id=id).update(Date=date,TaskType_id=tasktype,Workdone=workdone,Hours=hours,Billable=b1)
+        else:
+            datas = worklog (
+                User = request.user ,
+                Date = date,
+                TaskType_id = tasktype,
+                project_id = SubProject.objects.get(id=task_id),
+                Workdone = workdone,
+                Hours = hours,
+                Billable = b1
+            )
+            datas.save()
         return redirect('dailylog')
-
-    # all_data=worklog.objects.all()
-    # task =tasktype.objects.all().values()    
-    # context= {
-    #     'all_data':all_data,
-    #     'tasktype':task
-    # }
-    # return render(request, 'test1.html')
 
 # This is for editing record
 def Edit(request):
-    all_data=worklog.objects.all()
-    context= {
-        'all_data':all_data,      
-    }
-    return redirect(request, 'dailylog.html', context)
+    logId = request.GET.get('id')
+    data=worklog.objects.filter(id=logId).values()
+
+    return JsonResponse({'result':list(data)})
 
 # This is for updating record
 def Update(request,id):
@@ -159,4 +142,12 @@ def Delete(request,id):
     # }
     return redirect('dailylog')
 
+def gets(request):        
+    data=Project.objects.all().values()
+    return JsonResponse({'result':list(data)})
 
+def subproject(request):
+    id=request.GET['id']
+    subdata=SubProject.objects.filter(project=id).values()
+    # print(request.user)
+    return JsonResponse({'result':list(subdata)})

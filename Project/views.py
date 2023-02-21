@@ -60,6 +60,14 @@ def getNames(request,result):
                 'hour':x.Hours
             })
     else:
-        alldata = list(result.values())
-    
+        alldata =[]
+        for x in result:
+            alldata.append({
+                'id':x.id,
+                'user':x.User.username,
+                'date':x.Date,
+                'type':x.TaskType.TaskType,
+                'details':x.Workdone,
+                'hour':x.Hours
+            })
     return alldata

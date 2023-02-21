@@ -16,29 +16,9 @@
         {% block script %}
             <title>Timesheet - Leave Tracker</title>
         {% endblock %}
-        <script>
-            $(document).ready(function(){
-                is_admin = '{% if user.is_superuser %}True{% else %}False{% endif %}';
-                var mylocation = '';
-                //getLocation();
-              });
-    
-               //gte latitude and longitude
-        function getLocation() {
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(showPosition) 
-            } else { 
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
         
-        function showPosition(position) {
-          mylocation = "" + position.coords.latitude + "," + position.coords.longitude;
-      }
-
-        </script>
     
-        <style>
+<style>
             
   .btn{
     outline: none;
@@ -145,6 +125,7 @@
     top: 4px;
   }
   
+
         </style>
     </head>
     <body class="sb-nav-fixed">
@@ -221,7 +202,7 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="{% url 'project' %}">Projects</a>
+                                    <a class="nav-link" href="{% url 'aproject' %}">Projects</a>
                                     <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
                                 </nav>
                             </div>

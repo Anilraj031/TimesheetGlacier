@@ -44,11 +44,18 @@ def getAttendance(request):
     alldata = getUsernames(request,result)
     return JsonResponse({'attendance':alldata})
 
-def attendance_Details(request,attendance_id):
+#def attendance_Details(request,attendance_id):
+def attendance_Details(request):
+    attendance_id=request.POST.get('id')
     attendance = Attendance.objects.get(id=attendance_id)
-    start_location = getLocation_Name(attendance.start_location)
-    stop_location = getLocation_Name(attendance.stop_location)
-    #print(start_location)
+    if attendance.start_location != '':
+        start_location = getLocation_Name(attendance.start_location)
+    else:
+        start_location="Location Not Saved"
+    if attendance.stop_location != '':
+        stop_location = getLocation_Name(attendance.stop_location)
+    else:
+        stop_location="Location Not Saved"
     new_data = Attendance()
     new_data.date=attendance.date
     new_data.day=attendance.day
@@ -59,7 +66,8 @@ def attendance_Details(request,attendance_id):
     new_data.start_location =start_location
     new_data.stop_location=stop_location
     
-    return render(request,'Attendance/attendance_details.html',{'data':new_data})
+    #return render(request,'Attendance/attendance_details.html',{'data':new_data})
+    return JsonResponse({'start':str(new_data.start_location),'stop':str(new_data.stop_location)})
 
 @csrf_exempt
 def make_attendance(request):

@@ -4,11 +4,51 @@
 <style>
   .dataTables_filter { display: none; }
 </style>
+<script>
+$(document).ready(function(){
+    is_admin = '{% if user.is_superuser %}True{% else %}False{% endif %}';
+    getLocation();
+  });
+//gte latitude and longitude
+//location
+var mylocation = '';
+var locationError = '';
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition,showError);
+  } else { 
+      alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function showPosition(position) {
+  mylocation = "" + position.coords.latitude + "," + position.coords.longitude;
+}
+
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+    locationError = "User denied the request for Geolocation."
+      break;
+    case error.POSITION_UNAVAILABLE:
+    locationError = "Location information is unavailable."
+      break;
+    case error.TIMEOUT:
+    locationError= "The request to get user location timed out."
+      break;
+    case error.UNKNOWN_ERROR:
+    locationError = "An unknown error occurred."
+      break;
+  }
+}
+//location end
+</script>
 {% endblock %}
 {% block content %}
 <div class="">
   <div class="row">
     <div class="text-right w-50">
+      {% csrf_token %}
     <select class="form-control form-control-sm w-25" id="year" style="float:left;" onchange="getMonthData()">
       <option value="2023">2023</option>
       <option value="2022">2022</option>
@@ -48,24 +88,26 @@
 
   </div><br />
   <div class="table-wrap " style="float:clear">
-      <table class="table table-hover text-center shadow " id="example" style="width:100%;">
+      <table class="table table-hover  shadow " id="example" style="width:100%;">
         <thead id="thead">
           <tr>
             <th>Date</th>
-            <th>Day</th>
             <th>Entry</th>
             <th>Break</th>
             <th>Exit</th>
             <th>Hour</th>
-            {% if user.is_superuser %}<th>User</th><th>Action</th>{% endif %}
+            {% if user.is_superuser %}<th>User</th><th style="width:1%;">Action</th>{% endif %}
           </tr>
         </thead>
         <tbody id="tbody">
           {% for n in result %}
-          <tr><td>{{n.date}}</td><td>{{n.day}}</td><td>{{n.entry}}</td><td>{{n.lbreak1}}-{{n.lbreak2}}</td><td>{{n.exit}}</td><td>{{n.hour}}</td>
+          <tr><td>{{n.date}}</td><td>{{n.entry}}</td><td>{{n.lbreak1}}-{{n.lbreak2}}</td><td>{{n.exit}}</td><td>{{n.hour}}</td>
             {% if user.is_superuser %}
             <td>{{n.user.username}}</td>
-            <td><a class="btn btn-sm btn-warning" href="{% url 'a_details' attendance_id=n.id %}" id="a_details"><i class="bi bi-pencil-square"></i></a></td>
+            <td>
+              <!-- <a href="{% url 'a_details1' attendance_id=n.id %}" id="a_details"><i class="fas fa-sharp fa-solid fa-location-arrow text-info"></i></a> -->
+              <a onclick = "viewLocation({{n.id}})"  id="a_details" class="btn btn-info btn-sm bg-transparent p-2 border-0 pb-0"><i class="fas fa-sharp fa-solid fa-location-arrow text-info"></i></a>
+            </td>
             {% endif %}
             </tr>
           {% endfor%}
@@ -74,21 +116,50 @@
     </div>
 </div>
 
-
+<!--view location modal-->
+<div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content rounded-0">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Users Location Details</h5>
+              <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">SignIn</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <span id="startLocation">
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-sm-3">
+                <h6 class="mb-0">SignOut</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <span id="stopLocation">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Close</button>
+            
+          </div>
+      </div>
+  </div>
+</div>
+<!-- end view location modal-->
 
 <script>
-  var mylocation = '';
+ 
   $(document).ready(function(){
-    /* $("#btnstop").hide();
-    $("#btnbreak1").hide();
-    $("#btnbreak2").hide(); */
-    //getLocation();
-   //$("p").addClass("intro");
     const d = new Date();
     let month = d.getMonth();
     document.getElementById("month").selectedIndex = month;
   });
 
+  //for data table
   $(document).ready(function () {
     $('#example').dataTable({
       bInfo:true,
@@ -96,7 +167,8 @@
       lengthChange: false
   });
 });
-  
+
+
   function getFirstDayOfMonth(year, month) {
       return new Date(year, month, 1);
     }
@@ -123,13 +195,15 @@
       {
         if(mylocation != '')
         {
-          alert('Success');
+          //alert(mylocation);
+          data ={date:f_date,day:day,entry:time1,start_location:mylocation,btn:1};
+          $("#btnstart").hide();
+          $("#btnbreak1").show();
+          $("#btnstop").show();
         }
-        else{alert("Failed");}
-        data ={date:f_date,day:day,entry:time1,start_location:mylocation,btn:1};
-        $("#btnstart").hide();
-        $("#btnbreak1").show();
-        $("#btnstop").show();
+        else{
+          alert(locationError);
+        }
       }
       if(type == 'break')
       {
@@ -179,14 +253,13 @@
             for(i=0;i<data.attendance.length;i++)
             {
               dataset1.push(data.attendance[i].date,
-              data.attendance[i].day,
               data.attendance[i].entry,
               data.attendance[i].lbreak1+'-'+data.attendance[i].lbreak2,
               data.attendance[i].exit,
               data.attendance[i].hour)
               if(is_admin=='True'){
                 dataset1.push('<td>'+data.attendance[i].user+'</td>',
-                '<td><a class="btn btn-sm btn-warning" href="Details/'+data.attendance[i].id+'" id="a_details"><i class="bi bi-pencil-square"></i></a></tr>')
+                '<td><a class="btn btn-info btn-sm bg-transparent p-2 border-0 pb-0" onclick = "viewLocation('+data.attendance[i].id+')" id="a_details"><i class="fas fa-sharp fa-solid fa-location-arrow text-info"></i></a></tr>')
               }
               dataset.push(dataset1);
               dataset1=[];
@@ -219,14 +292,14 @@
                 for(i=0;i<data.attendance.length;i++)
                 {
                   dataset1.push(data.attendance[i].date,
-                  data.attendance[i].day,
                   data.attendance[i].entry,
                   data.attendance[i].lbreak1+'-'+data.attendance[i].lbreak2,
                   data.attendance[i].exit,
                   data.attendance[i].hour)
                   if(is_admin=='True'){
                     dataset1.push('<td>'+data.attendance[i].user+'</td>',
-                    '<td><a class="btn btn-sm btn-warning" href="Details/'+data.attendance[i].id+'" id="a_details"><i class="bi bi-pencil-square"></i></a></tr>')
+                    //'<td><a href="Details/'+data.attendance[i].id+'" id="a_details"><i class="fas fa-sharp fa-solid fa-location-arrow text-info"></i></a></tr>')
+                      '<td><a class="btn btn-info btn-sm bg-transparent p-2 border-0 pb-0" onclick = "viewLocation('+data.attendance[i].id+')" id="a_details"><i class="fas fa-sharp fa-solid fa-location-arrow text-info"></i></a></tr>')
                   }
                   dataset.push(dataset1);
                   dataset1=[];
@@ -239,5 +312,23 @@
     });
     }
     
+
+    function viewLocation(id)
+    {
+      csr =$("input[name=csrfmiddlewaretoken]").val();
+      data={id:id,csrfmiddlewaretoken:csr};
+      $.ajax({
+        url: "{% url 'a_details' %}",
+        method: "POST",
+        data: data,
+        success: function(data){
+          console.log(data.start);
+          $("#startLocation").html(data.start)
+          $("#stopLocation").html(data.stop)
+          console.log(data.stop);
+          $("#locationModal").modal('show');
+        },
+      });
+    }
 </script>
 {% endblock %}

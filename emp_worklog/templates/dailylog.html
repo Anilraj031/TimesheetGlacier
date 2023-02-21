@@ -1,258 +1,33 @@
 {% extends "base.html" %}
 {% block scripts %}
 <style>
-	body {
-        color: #566787;
-		background: #f5f5f5;
-		font-family: 'Varela Round', sans-serif;
-		font-size: 13px;
+	.userfm {
+	  border-top:0 !important;
+	  border-left:0 !important;
+	  border-right:0 !important;
+	  border-bottom:1px solid grey !important;
+	  border-radius: 0 !important;
 	}
-	.table-wrapper {
-        background: #fff;
-        padding: 20px 25px;
-        margin: 30px 0;
-		border-radius: 3px;
-        box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    }
-	.table-title {        
-		padding-bottom: 15px;
-		background: #435d7d;
-		color: #fff;
-		padding: 16px 30px;
-		margin: -20px -25px 10px;
-		border-radius: 3px 3px 0 0;
-    }
-    .table-title h2 {
-		margin: 5px 0 0;
-		font-size: 24px;
-	}
-	.table-title .btn-group {
-		float: right;
-	}
-	.table-title .btn {
-		color: #fff;
-		float: right;
-		font-size: 13px;
-		border: none;
-		min-width: 50px;
-		border-radius: 2px;
-		border: none;
-		outline: none !important;
-		margin-left: 10px;
-	}
-	.table-title .btn i {
-		float: left;
-		font-size: 21px;
-		margin-right: 5px;
-	}
-	.table-title .btn span {
-		float: left;
-		margin-top: 2px;
-	}
-    table.table tr th, table.table tr td {
-        border-color: #e9e9e9;
-		padding: 12px 15px;
-		vertical-align: middle;
-    }
-	table.table tr th:first-child {
-		width: 60px;
-	}
-	table.table tr th:last-child {
-		width: 100px;
-	}
-    table.table-striped tbody tr:nth-of-type(odd) {
-    	background-color: #fcfcfc;
-	}
-	table.table-striped.table-hover tbody tr:hover {
-		background: #f5f5f5;
-	}
-    table.table th i {
-        font-size: 13px;
-        margin: 0 5px;
-        cursor: pointer;
-    }	
-    table.table td:last-child i {
-		opacity: 0.9;
-		font-size: 22px;
-        margin: 0 5px;
-    }
-	table.table td a {
-		font-weight: bold;
-		color: #566787;
-		display: inline-block;
-		text-decoration: none;
-		outline: none !important;
-	}
-	table.table td a:hover {
-		color: #2196F3;
-	}
-	table.table td a.edit {
-        color: #FFC107;
-    }
-    table.table td a.delete {
-        color: #F44336;
-    }
-    table.table td i {
-        font-size: 19px;
-    }
-	table.table .avatar {
-		border-radius: 50%;
-		vertical-align: middle;
-		margin-right: 10px;
-	}
-    .pagination {
-        float: right;
-        margin: 0 0 5px;
-    }
-    .pagination li a {
-        border: none;
-        font-size: 13px;
-        min-width: 30px;
-        min-height: 30px;
-        color: #999;
-        margin: 0 2px;
-        line-height: 30px;
-        border-radius: 2px !important;
-        text-align: center;
-        padding: 0 6px;
-    }
-    .pagination li a:hover {
-        color: #666;
-    }	
-    .pagination li.active a, .pagination li.active a.page-link {
-        background: #03A9F4;
-    }
-    .pagination li.active a:hover {        
-        background: #0397d6;
-    }
-	.pagination li.disabled i {
-        color: #ccc;
-    }
-    .pagination li i {
-        font-size: 16px;
-        padding-top: 6px
-    }
-    .hint-text {
-        float: left;
-        margin-top: 10px;
-        font-size: 13px;
-    }  
-	/* Modal styles */
-	.modal .modal-dialog {
-		max-width: 500px;
-	}
-	.modal .modal-header, .modal .modal-body, .modal .modal-footer {
-		padding: 15px 20px;
-	}
-	.modal .modal-content {
-		border-radius: 3px;
-		/*font-size: 14px;*/
-		font-size: 15px;
-	}
-	.modal .modal-footer {
-		background: #ecf0f1;
-		border-radius: 0 0 3px 3px;
-	}
-	.modal .modal-title {
-		display: inline-block;
-	}
-	.modal .form-control {
-		border-radius: 2px;
-		box-shadow: none;
-		border-color: #dddddd;
-	}
-	.modal textarea.form-control {
-		resize: vertical;
-	}
-	.modal .btn {
-		border-radius: 2px;
-		min-width: 100px;
-	}	
-	.modal form label {
-		font-weight: normal;
-	}	
-
-		/*search*/
-	.search-box {
-		display: inline-block;
-		width: 80%;
-		height: 35px;
-		border-radius: 3px;
-		padding: 0;
-		position: relative;
-		background: #fff;
-		border: 1px solid #ddd;
-		-webkit-transition: all 200ms ease-in-out;
-		-moz-transition: all 200ms ease-in-out;
-		transition: all 200ms ease-in-out;
-	}
-	
-	.search-box input[type=text] {
-		border: none;
-		box-shadow: none;
-		display: inline-block;
-		padding: 17px;
-		background: transparent;
-	}
-	
-	.search-box .search-btn {
-		position: absolute;
-		right: 2px;
-		top: 1px;
-		color: #aaa;
-		border-radius: 3px;
-		font-size: 21px;
-		padding: 5px 10px 1px;
-		-webkit-transition: all 200ms ease-in-out;
-		-moz-transition: all 200ms ease-in-out;
-		transition: all 200ms ease-in-out;
-	}
-
-</style>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </style>
 {% endblock %}
 {% block content %} 
     <div class="container">
         <div class="table-wrapper">
             <div class="table-title">
-                	<div class="row">									
-						<form method="get">
-							<div class='col-md-4'>							
-								<div class='search-box'>
-									<input class='form-control' placeholder='Type Your Search Here' type='text' name='searching'>
-										{% comment %} {% if searching=={{User}} %}{% endif %} {% endcomment %}
-									<button type="submit" class='btn btn-link search-btn'>
-										<i class='glyphicon glyphicon-search'></i>
-									</button>
-								</div>
-							</div> 
-						</form> 
+                	<div class="row">	
 						<div class="col-md-8">				
-							<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Record</span></a>
-							{% comment %} <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>{% endcomment %}
+							<!-- <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Record</span></a> -->
+							<a id="logBtn" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addLog">Add Log</a>
 						</div>
                 	</div>
             </div>
-        	<table class="table table-striped table-hover">
+        	<table class="table table-striped table-hover" id="logTable">
                 <thead>
                     <tr>
-						
-                        <th>SN</th>
+						<th>Date</th>
                         <th>User</th>
-                        <th>Date</th>
                         <th>TaskType</th>
-                        <th>Workdone</th>
+						<th>Worked On</th>
                         <th>Hours</th>
                     	<th>Billable</th>
                         <th>Action</th>
@@ -262,25 +37,23 @@
                 <tbody>
                     {% for d in all_data %}
                     <tr>
-                        <td>{{forloop.counter}}</td>
-                            <td>{{d.User}}</td>
-                            <td>{{d.Date}}</td>
-                            <td>{{d.TaskType.TaskType}}</td>
-                            <td>{{d.Workdone}}</td>
-                            <td>{{d.Hours}}</td>
-							<td><input class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
-							
-                        <td>
-                            <a href="#editEmployeeModal-{{forloop.counter}}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                            <a href="#deleteEmployeeModal-{{forloop.counter}}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+						<td>{{d.Date}}</td>
+						<td>{{d.User}}</td>
+						<td>{{d.TaskType.TaskType}}</td>
+						<td>{{d.project_id.name}}</td>
+						<td>{{d.Hours}}</td>
+						<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
+						<td>
+                            <a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
+							<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
                         </td>
                     </tr>
-					{%empty%}
+					{% empty %}
 					<center><h1><b>The Record Not Found.</b></h1></center>
                     {% endfor %}
                 </tbody>
             </table>
-			<div class="clearfix" style="display: flex; justify-content: center;">
+			<div class="clearfix" style="display: flex; justify-content: right;">
                 {% comment %} <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div> {% endcomment %}
                 <nav aria-label="...">
 					<ul class="pagination">
@@ -307,131 +80,189 @@
         </div>
     </div>
 
+
+	
+
 	<!-- Add Modal HTML -->
-	<div id="addEmployeeModal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form action="{% url 'add' %}" method="POST">
-                    {% csrf_token %}
+	<div class="modal fade" id="addLog" tabindex="-1" role="dialog" aria-labelledby="addLogLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content rounded-0">
+				<form action="{% url 'add' %}" method="POST" id="LogForm">
+					{% csrf_token %}
+					<input type="hidden" id="logid" />
 					<div class="modal-header">						
 						<h4 class="modal-title">Add Record</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body">					
-						<div class="form-group">
-							<label>User</label>
-							<input name="user" type="text" class="form-control" required>
+					<div class="modal-body">
+						<div class="form-group row">
+							<label class="col-3">Date</label>							
+							<input name="date" id="date" type="date" class="form-control form-control-sm w-25 col-9 userfm" required>
 						</div>
-						<div class="form-group">
-							<label>Date</label>							
-							<input name="date" type="date" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>TaskType</label>
-							<select name="tasktype" class="form-control" id="exampleFormControlSelect1">
+						<div class="form-group row mt-2">
+							<label class="col-3">TaskType</label>
+							<select name="tasktype" id="tasktype" class="form-control form-control-sm w-25 userfm" id="exampleFormControlSelect1" onchange="getproject()">
 								<option>Select</option>
 								{% for n in tasktype %}
-                                <option value="{{n.id}}">{{n.TaskType}}</option>
+								<option value="{{n.id}}">{{n.TaskType}}</option>
 								{% endfor %}                            
-                            </select>
+							</select>
+							<span class="col" id="project"></span>
+							<span class="col" id="subproject"></span>
 						</div>
-						<div class="form-group">
-							<label>Workdone</label>
-							<textarea name="workdone" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+						<div class="form-group row mt-2">
+							<label class="col-3">Hours</label>
+							<input name="hours" id="hours" type="number" class="form-control form-control-sm col-9 w-25 userfm" required>
 						</div>
-                        <div class="form-group">
-							<label>Hours</label>
-							<input name="hours" type="text" class="form-control" required>
+						<div class="form-group row">
+								<label class="col-3">Billable</label>
+								<input name="billable" id="billable" class="form-check-input col-9 rounded-1 userfm" type="checkbox"  id="flexCheckDefault">								
 						</div>
-                        <div class="form-group">
-								<label>Billable</label>&nbsp&nbsp<input name="billable" class="form-check-input" type="checkbox"  id="flexCheckDefault">								
-						</div>					
+						<div class="form-group row mt-2">
+							<label class="col-3">Workdone</label>
+							<div class="col-9 p-0 pe-2">
+								<textarea name="workdone" id="workdone" class="form-control userfm" id="exampleFormControlTextarea1" rows="5" required></textarea>
+							</div>
+						</div>				
 					</div>
 					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-success" value="Add">
+						<input type="button" class="btn btn-info btn-sm" data-bs-dismiss="modal" aria-label="Close" value="Cancel">
+						<input id="btnSave" type="submit" class="btn btn-success btn-sm" value="Save">
+						<a id="btnUpdate" class="btn btn-success btn-sm" onclick="updateLog()">Update</a>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-
-	<!-- Edit Modal HTML -->
-	{% for u in all_data %}
-	<div id="editEmployeeModal-{{forloop.counter}}" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form action="/update/{{u.id}}" method="POST">
-					{% csrf_token %}
-					<div class="modal-header">						
-						<h4 class="modal-title">Edit Record</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">					
-						<div class="form-group">
-							<label>User</label>
-							<input name="user" value="{{u.User}}" type="text" class="form-control" required>
-						</div>
-						{% comment %} {{u.Date}} {% endcomment %}
-						<div class="form-group">
-							<label>Date</label>							
-							{% comment %} {{ worklog_form.my_date_field }}	 {% endcomment %}
-							<input type="date" name="date" value="{{u.Date}}" class="form-control" > 
-						</div>
-						<div class="form-group">
-							<label>TaskType</label>
-							<select name="tasktype" class="form-control" id="exampleFormControlSelect1">                       
-								<option >Select</option>
-								{% for u1 in tasktype %}
-                                <option value="{{u1.id}}" {% if u1.id == u.TaskType.id %}selected{% endif %}>{{u1.TaskType}}</option>
-								{% endfor %}
-                                </select>
-						</div>
-						<div class="form-group">
-							<label>Workdone</label>
-							<textarea name="workdone"  class="form-control" id="exampleFormControlTextarea1" rows="3">{{u.Workdone}}</textarea>
-						</div>
-						<div class="form-group">
-							<label>Hours</label>
-							<input name="hours" value="{{u.Hours}}" type="text" class="form-control">
-						</div>
-						<div class="form-group">
-							<label>Billable</label>&nbsp&nbsp<input name="billable" class="form-check-input" type="checkbox"  id="flexCheckDefault">								
-						</div>					
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-info" value="Update">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	{% endfor %}
 
 	<!-- Delete Modal HTML -->
-	{% for d in all_data  %}
-	<div id="deleteEmployeeModal-{{forloop.counter}}" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
+	<div class="modal fade" id="deleteLog" tabindex="-1" role="dialog" aria-labelledby="deleteLogLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content rounded-0">
 				<form>
 					<div class="modal-header">						
 						<h4 class="modal-title">Delete Record</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">					
 						<p>Are you sure you want to delete these Records?</p>
-						<p class="text-warning"><small>{{d.User}}</small></p>
 					</div>
 					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						{% comment %} <input type="submit" class="btn btn-danger" value="Delete"> {% endcomment %}
-						<a href="/delete/{{d.id}}" type="submit" class="btn btn-danger">Delete</a>
+						<input type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" aria-label="Close" value="No">
+						<a href="" type="submit" class="btn btn-danger btn-sm"> Yes </a>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>	
-	{% endfor %}
 
+
+
+<script>
+	$(document).ready(function () {
+		$('#logTable').dataTable({
+			bPaginate: false,
+			bInfo:false,
+		  pagingType: 'full_numbers',
+		  lengthChange: false
+	  });
+	});
+
+$(document).ready(function(){
+	$("#logBtn").click(function(){
+        $("#LogForm").trigger("reset");
+		$("#btnSave").show();
+		$("#btnUpdate").hide();
+    });
+
+});
+
+function getproject(){
+        $("#project").show();
+		$.ajax({
+			url:"{% url 'project' %}",
+			method:"GET",
+			success:function(data){
+			console.log(data);      
+			var html="<select id='project_list'class='form-control form-control-sm' onchange='subproject()' >"+
+					'<option>Select Projects</option>';
+				for( a=0; a<data.result.length; a++){
+					html +="<option  value='"+data.result[a].id+"'>" +data.result[a].name +"</option>";
+				}
+				html+="</select>";
+				$("#project").html(html);       
+			},  
+		});
+}
+
+function subproject(){
+    pid=$('#project_list').val();
+	$.ajax({
+		data:{id:pid},
+		url:"{% url 'subproject' %}",
+		method:"GET",
+		success:function(data){
+		console.log(data);
+		var html="<select id='subproject' name='subproject' class='form-control form-control-sm'><option>Select SubProjects</option>";
+		
+		for( a=0; a<data.result.length; a++){
+			html +="<option  value='"+data.result[a].id+"'>" +data.result[a].name +"</option>";
+		}
+		html+="</select>";
+		document.getElementById("subproject").innerHTML=html;   
+		},  
+	});
+}
+
+function getLog(id){
+	$.ajax({
+		url:"{% url 'getLog' %}",
+		data:{id:id},
+		method:"GET",
+		success:function(data){
+		//console.log(data.result);
+			for(i=0;i<data.result.length;i++)
+			{
+				$("#logid").val(data.result[i].id);
+				$("#date").val(data.result[i].Date);
+				$("#tasktype").val(data.result[i].TaskType_id)
+				$("#hours").val(data.result[i].Hours)
+				$("#workdone").val(data.result[i].Workdone)
+				if(data.result[i].Billable == true){
+					$("#billable").prop("checked", true);
+				}
+				else{
+					$("#billable").prop("checked", false);
+				}
+				
+			}
+			$("#btnSave").hide();
+			$("#btnUpdate").show();
+			$("#addLog").modal('show');
+		},  
+	});
+}
+
+function updateLog(){
+	id=$("#logid").val();
+	date=$("#date").val();
+	tasktype=$("#tasktype").val()
+	project = $("#subproject").val();
+	hour=$("#hours").val()
+	work=$("#workdone").val()
+	billable=$("#billable").val();
+	csr =$("input[name=csrfmiddlewaretoken]").val();
+
+	data={id:id,date:date,tasktype:tasktype,subproject:project,workdone:work,hours:hour,billable:billable,action:'update',csrfmiddlewaretoken:csr}
+	$.ajax({
+		url:"{% url 'add' %}",
+		data:data,
+		method:"POST",
+		success:function(data){
+		//console.log(data.result);
+		$("#addLog").modal('hide');
+		},  
+	});
+}
+</script>
 {% endblock %}

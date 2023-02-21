@@ -12,9 +12,12 @@ urlpatterns = [
     path('addrecord/', views.addrecord),
     path('dailylog/', views.dailylog, name='dailylog'),
     path('add', views.ADD, name='add'),
-    path('edit', views.Edit, name='edit'),
+
+    path('edit', views.Edit, name='getLog'),
     path('update/<str:id>', views.Update, name='update'),
     path('delete/<str:id>', views.Delete, name='delete'),
+    path('project',views.gets, name='project'),
+    path('subproject',views.subproject, name='subproject'),
 
     # path('filter/', views.filter)
 ]

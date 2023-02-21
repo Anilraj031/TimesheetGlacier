@@ -3,7 +3,8 @@ from Attendance import views
 
 urlpatterns = [
     path('Details', views.attendance, name='attendance'),
-    path('Details/<attendance_id>', views.attendance_Details, name='a_details'),
+    path('Details/<attendance_id>', views.attendance_Details, name='a_details1'),
+    path('DetailsId', views.attendance_Details, name='a_details'),
     path('Attendance', views.make_attendance, name='makeattendance'),
     path('Leaves',views.getleave, name='leave'),
     path('RequestLeave', views.request_leave, name='requestLeave'),
