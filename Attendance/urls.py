@@ -16,7 +16,8 @@ urlpatterns = [
     path('updateLeave',views.updateLeave,name='updateLeave'),
     path('leaveCount',views.getLeaveCount, name='getLeaveCount'),
     path('attendanceCount',views.getattendanceCount, name='getAttendanceCount'),
-    path('hours',views.getHoursData,name="getHours"),
+    
     path('updateLeaveType',views.updateLeaveType, name="updateType"),
-    path('getLeaveType',views.getLeaveType,name="getType")
+    path('getLeaveType',views.getLeaveType,name="getType"),
+    path('getToday',views.getTodayAttendance,name='get_todays_attendance')
 ]

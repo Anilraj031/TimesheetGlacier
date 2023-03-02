@@ -3,6 +3,14 @@
 <title>Attendance</title>
 <style>
   .dataTables_filter { display: none; }
+  h1, h3, span { 
+    text-align: center;
+    font-family: sans-serif;
+  }
+  h1 span {
+    /*border: 1px solid black; */
+    padding: 5px;
+  }
 </style>
 <script>
 $(document).ready(function(){
@@ -46,7 +54,18 @@ function showError(error) {
 {% endblock %}
 {% block content %}
 <div class="">
-  <div class="row">
+  <div class="mt-4">
+    <h1 class="display-1 text-success"><span id="trackTime">00:00:00</span></h1>
+    
+    <div class="text-center">
+      <button name="start" class="btn btn-lg btn-primary ps-5 pe-5" style="display:{% if btn.btn1 == True %}none;{% elif btn.btn1 == False %}; {% endif %}" onclick="make_attendance('start')" id="btnstart">Start</button>
+      <button name="reset" class="btn btn-lg btn-danger ps-5 pe-5" style="display:{% if btn.btn3 == True %}none;{% elif btn.btn3 == False %}; {% endif %}" onclick="make_attendance('stop')" id="btnstop">End</button>
+      <button name="stop" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == True %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('break')" id="btnbreak1">Time Off</button>
+      <button name="start" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == False %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('resume')" id="btnbreak2">Continue</button>
+    </div>
+  </div>
+  
+  <div class="row mt-4">
     <div class="text-right w-50">
       {% csrf_token %}
     <select class="form-control form-control-sm w-25" id="year" style="float:left;" onchange="getMonthData()">
@@ -79,16 +98,10 @@ function showError(error) {
       </select>
       {% endif %}
     </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end w-50">
-      <button class="btn btn-md btn-primary " style="display:{% if btn.btn1 == True %}none;{% elif btn.btn1 == False %}; {% endif %}" onclick="make_attendance('start'),start()" id="btnstart">Start</button>
-      <button class="btn btn-md btn-danger " style="display:{% if btn.btn3 == True %}none;{% elif btn.btn3 == False %}; {% endif %}" onclick="pause(),make_attendance('stop')" id="btnstop">End</button>
-      <button class="btn btn-md btn-warning " style="display:{% if btn.btn2 == True %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="pause(),make_attendance('break')" id="btnbreak1">Time Off</button>
-      <button class="btn btn-md btn-warning " style="display:{% if btn.btn2 == False %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="start(),make_attendance('resume')" id="btnbreak2">Continue</button>
-    </div>
 
-  </div><br />
-  <div class="table-wrap " style="float:clear">
-      <table class="table table-hover  shadow " id="example" style="width:100%;">
+  </div>
+  <div class="table-wrap ">
+      <table class="table table-hover  shadow table-responsive-xl" id="example" style="width:100%;">
         <thead id="thead">
           <tr>
             <th>Date</th>
@@ -115,6 +128,9 @@ function showError(error) {
       </table>
     </div>
 </div>
+
+
+
 
 <!--view location modal-->
 <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -157,6 +173,8 @@ function showError(error) {
     const d = new Date();
     let month = d.getMonth();
     document.getElementById("month").selectedIndex = month;
+    checkToday();
+    //checkTimer();
   });
 
   //for data table
@@ -165,8 +183,8 @@ function showError(error) {
       bInfo:true,
       pagingType: 'full_numbers',
       lengthChange: false
+    });
   });
-});
 
 
   function getFirstDayOfMonth(year, month) {
@@ -223,10 +241,11 @@ function showError(error) {
         $("#btnbreak2").hide();
       }
       if(type =='stop'){
-        get_h = save_hr;
-        get_m = save_min;
+        time = $('#trackTime').text();
+        get_h = time.split(":")[0];
+        get_m = time.split(":")[1];
         w_hour = get_h+':'+get_m;
-        alert(mylocation);
+        //alert(mylocation);
         data ={date:f_date,exit:time1,hour:w_hour,stop_location:mylocation,btn:4};
        
         var isHidden = $('#btnbreak2').is(':hidden');
@@ -236,7 +255,6 @@ function showError(error) {
           $("#btnstop").hide();
           $("#btnbreak1").hide();
           $("#btnbreak2").hide();
-          reset();
         }
         else{
           alert("End your break first");
@@ -330,5 +348,138 @@ function showError(error) {
         },
       });
     }
+</script>
+
+<script>
+  
+    // Some global variables
+    var startTime = 0,
+        elapsed   = 0,
+        timerId   = 0,
+        $timer    = $("h1 span");
+    
+    function checkToday()
+    {
+      $.ajax({
+        url: "{% url 'get_todays_attendance' %}",
+        method: "GET",
+        success: function(data){
+                console.log(data);
+                if(data.result[0].exit == null)
+                {
+                  checkTimer(data.result[0].entry+":00")
+                }
+                if(data.result[0].lbreak1 != null && data.result[0].lbreak2 == null)
+                {
+                  pauseTimer();
+                }
+                
+        },
+    });
+    }
+    function checkTimer(time)
+    {
+      var today = new Date();
+      var endTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      //alert(time);
+      var startTime = time;//"21:46:00";
+      var tim = diff(startTime, endTime);
+      editTimer();
+      $timer.text(tim+":"+today.getSeconds());
+      setElapsed();
+      startTimer();
+    }
+
+    function formatTime(time) {
+      var hrs = Math.floor(time / 60 / 60 / 1000),
+          min = Math.floor((time - hrs*60*60*1000) / 60 / 1000),
+          sec = Math.floor((time - hrs*60*60*1000 - min*60*1000) / 1000);
+      
+      hrs = hrs < 10 ? "0" + hrs : hrs;
+      min = min < 10 ? "0" + min : min;
+      sec = sec < 10 ? "0" + sec : sec;
+      
+      return hrs + ":" + min + ":" + sec;
+    }
+    
+    function elapsedTimeFrom(time) {
+      return formatTime(time - startTime + elapsed);
+    }
+    
+    function showElapsed() {
+      $timer.text(elapsedTimeFrom(Date.now()));
+    }
+    
+    function startTimer() {
+      // React only if timer is stopped
+      startTime = startTime || Date.now();
+      timerId = timerId || setInterval(showElapsed, 1000);
+    }
+    
+    function pauseTimer() {
+      // React only if timer is running
+      if (timerId) {
+        clearInterval(timerId);
+        elapsed += Date.now() - startTime;
+        startTime = 0;
+        timerId = 0;
+      }
+    }
+    
+    function resetTimer() {
+      clearInterval(timerId);
+      $timer.text("00:00:00");
+      startTime = 0;
+      elapsed = 0;
+      timerId = 0;
+    }
+  
+    function editTimer() {
+      pauseTimer();
+      $timer.prop("contenteditable", true);
+      //$timer.css("border", "1px solid red");
+    }
+  
+    function setElapsed() {
+      var time = $timer.text(),
+          arr  = time.split(":");
+      $timer.prop("contenteditable", false);
+      //$timer.css("border", "1px solid black");
+      elapsed = parseInt(arr[0]*60*60, 10);
+      elapsed += parseInt(arr[1]*60, 10);
+      elapsed += parseInt(arr[2], 10);
+      elapsed *= 1000;
+    }
+    
+    function sendTime() {
+      pauseTimer();
+      // Set hidden input value before send
+      $("[name='time']").val(formatTime(elapsed));
+    }
+  
+    $("[name='start']").click(startTimer);
+    $("[name='stop']").click(pauseTimer); 
+    $("[name='reset']").click(resetTimer);
+    $("[name='Check']").click(checkTimer);
+    //$timer.dblclick(editTimer);
+    $timer.blur(setElapsed);
+    $("form").submit(sendTime);
+    
+    function diff(start, end) {
+      start = start.split(":");
+      end = end.split(":");
+      var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+      var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+      var diff = endDate.getTime() - startDate.getTime();
+      var hours = Math.floor(diff / 1000 / 60 / 60);
+      diff -= hours * 1000 * 60 * 60;
+      var minutes = Math.floor(diff / 1000 / 60);
+      
+      // If using time pickers with 24 hours format, add the below line get exact hours
+      if (hours < 0)
+         hours = hours + 24;
+      
+      return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+      }
 </script>
 {% endblock %}

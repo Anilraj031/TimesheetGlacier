@@ -1,14 +1,12 @@
 {% extends "base.html" %}
-{% block scripts %}
+{% block script %}
+<title>Daily Log</title>
 <style>
-	.userfm {
-	  border-top:0 !important;
-	  border-left:0 !important;
-	  border-right:0 !important;
-	  border-bottom:1px solid grey !important;
-	  border-radius: 0 !important;
-	}
-  </style>
+table{
+	font-weight:normal !important;
+}
+</style>
+
 {% endblock %}
 {% block content %} 
     <div class="container">
@@ -21,6 +19,99 @@
 						</div>
                 	</div>
             </div>
+			<h6 class="mt-4">This Week<h6>
+			<table class="table table-striped table-hover table-borderless shadow" id="thisweeklogTable">
+                <thead>
+                    <tr>
+						<th>Date</th>
+                        <th>User</th>
+                        <th>TaskType</th>
+						<th>Worked On</th>
+						<th>Priority</th>
+                        <th>Hours</th>
+                    	<th>Billable</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in thisweekdata %}
+                    <tr style="height:50px;opacity:0.8;" class="align-middle">
+						<td>{{d.Date}}</td>
+						<td>{{d.User}}</td>
+						<td>{{d.TaskType.TaskType}}</td>
+						<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
+						<td>
+							{% if d.TaskType.TaskType == 'Issue' %}
+							<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+							{% endif %}
+						</td>
+						<td>{{d.Hours}}</td>
+						<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
+						<td>
+                            <a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
+							<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
+                        </td>
+                    </tr>
+					{% empty %}
+					<center><h5><b>The Records Not Found.</b></h5></center>
+                    {% endfor %}
+                </tbody>
+				<tfoot>
+					<tr>
+						<td colspan="5">Total</td>
+						<td colspan="3">
+							{{thisweektotal.Hours__sum}}
+						</td>
+					</tr>
+				</tfoot>
+            </table>
+			<h6 class="mt-4">Last Week<h6>
+				<table class="table  table-striped table-hover table-borderless shadow" id="weeklogTable">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>User</th>
+							<th>TaskType</th>
+							<th>Worked On</th>
+							<th>Priority</th>
+							<th>Hours</th>
+							<th>Billable</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for d in lastweekdata %}
+						<tr>
+							<td>{{d.Date}}</td>
+							<td>{{d.User}}</td>
+							<td>{{d.TaskType.TaskType}}</td>
+							<td>{% if d.project_id != None %}<a href="{% url 'projectDetails' pid=d.project_id.id%}">{{d.project_id.name}}{% else %}<a href="{% url 'issueDetails' issueid=d.task.id %}">{{d.task.ticket_name}} {% endif %}</a></td>
+							<td>
+								{% if d.TaskType.TaskType == 'Issue' %}
+								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+								{% endif %}
+							</td>
+							<td>{{d.Hours}}</td>
+							<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
+							<td>
+								<a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
+								<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
+							</td>
+						</tr>
+						{% empty %}
+						<center><h5><b>The Records Not Found.</b></h5></center>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="5">Total</td>
+							<td colspan="3">
+								{{lastweektotal.Hours__sum}}
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			<h6>This Month<h6>
         	<table class="table table-striped table-hover" id="logTable">
                 <thead>
                     <tr>
@@ -28,6 +119,8 @@
                         <th>User</th>
                         <th>TaskType</th>
 						<th>Worked On</th>
+						<th>Priority</th>
+						<th>Status</th>
                         <th>Hours</th>
                     	<th>Billable</th>
                         <th>Action</th>
@@ -40,7 +133,17 @@
 						<td>{{d.Date}}</td>
 						<td>{{d.User}}</td>
 						<td>{{d.TaskType.TaskType}}</td>
-						<td>{{d.project_id.name}}</td>
+						<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
+						<td>
+							{% if d.TaskType.TaskType == 'Issue' %}
+							<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+							{% endif %}
+						</td>
+						<td>
+							{% if d.TaskType.TaskType == 'Issue' %}
+							<span class="badge rounded-0 {% if d.task.state == 'New' %}text-bg-primary{% elif d.task.state == 'InProgress' %}text-bg-info{% elif d.task.state == 'Completed' %}text-bg-success{% elif d.task.state == 'Hold' %}text-bg-warning{% elif d.task.state == 'Canceled' %}text-bg-danger{% endif %}">{{d.task.state}}</span>
+							{% endif %}
+						</td>
 						<td>{{d.Hours}}</td>
 						<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
 						<td>
@@ -87,7 +190,7 @@
 	<div class="modal fade" id="addLog" tabindex="-1" role="dialog" aria-labelledby="addLogLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content rounded-0">
-				<form action="{% url 'add' %}" method="POST" id="LogForm">
+				<form action="{% url 'addLog' %}" method="POST" id="LogForm">
 					{% csrf_token %}
 					<input type="hidden" id="logid" />
 					<div class="modal-header">						
@@ -101,13 +204,14 @@
 						</div>
 						<div class="form-group row mt-2">
 							<label class="col-3">TaskType</label>
-							<select name="tasktype" id="tasktype" class="form-control form-control-sm w-25 userfm" id="exampleFormControlSelect1" onchange="getproject()">
-								<option>Select</option>
+							<select name="tasktype" id="tasktype" class="form-control form-control-sm w-25 userfm" id="exampleFormControlSelect1" onchange="gettask()" required>
+								<option value="">Select</option>
 								{% for n in tasktype %}
 								<option value="{{n.id}}">{{n.TaskType}}</option>
 								{% endfor %}                            
 							</select>
 							<span class="col" id="project"></span>
+							<span class="col" id="issue"></span>
 							<span class="col" id="subproject"></span>
 						</div>
 						<div class="form-group row mt-2">
@@ -116,12 +220,12 @@
 						</div>
 						<div class="form-group row">
 								<label class="col-3">Billable</label>
-								<input name="billable" id="billable" class="form-check-input col-9 rounded-1 userfm" type="checkbox"  id="flexCheckDefault">								
+								<input name="billable" id="billable" class="form-check-input col-9 rounded-1" type="checkbox">								
 						</div>
 						<div class="form-group row mt-2">
 							<label class="col-3">Workdone</label>
 							<div class="col-9 p-0 pe-2">
-								<textarea name="workdone" id="workdone" class="form-control userfm" id="exampleFormControlTextarea1" rows="5" required></textarea>
+								<textarea name="workdone" id="workdone" class="form-control userfm" rows="5" required></textarea>
 							</div>
 						</div>				
 					</div>
@@ -163,8 +267,8 @@
 		$('#logTable').dataTable({
 			bPaginate: false,
 			bInfo:false,
-		  pagingType: 'full_numbers',
-		  lengthChange: false
+		  	pagingType: 'full_numbers',
+		  	lengthChange: false
 	  });
 	});
 
@@ -177,20 +281,47 @@ $(document).ready(function(){
 
 });
 
-function getproject(){
-        $("#project").show();
+function gettask()
+{
+	var task=$("#tasktype").val();
+	$("#project").empty();
+	$("#subproject").empty();
+	$("#issue").empty();
+	$("#project").hide();
+	$("#subproject").hide();
+	$("#issue").hide();
+	getproject(task)
+}
+
+function getproject(task_id){
+		data={task:task_id};
 		$.ajax({
 			url:"{% url 'project' %}",
+			data:data,
 			method:"GET",
-			success:function(data){
-			console.log(data);      
-			var html="<select id='project_list'class='form-control form-control-sm' onchange='subproject()' >"+
-					'<option>Select Projects</option>';
-				for( a=0; a<data.result.length; a++){
-					html +="<option  value='"+data.result[a].id+"'>" +data.result[a].name +"</option>";
+			success:function(data){  
+				if(task_id==2)
+				{
+					$("#project").show();
+					var html="<select id='project_list'class='form-control form-control-sm' onchange='subproject()' >"+
+						'<option>Select Projects</option>';
+					for( a=0; a<data.result.length; a++){
+						html +="<option  value='"+data.result[a].id+"'>" +data.result[a].name +"</option>";
+					}
+					html+="</select>";
+					$("#project").html(html);   
 				}
-				html+="</select>";
-				$("#project").html(html);       
+				if(task_id==1)
+				{
+					$("#issue").show();
+					var html="<select id='issue_list' name='issue_list'class='form-control form-control-sm'>"+
+						'<option>Select Task</option>';
+					for( a=0; a<data.result.length; a++){
+						html +="<option  value='"+data.result[a].id+"'>" +data.result[a].ticket_name +"</option>";
+					}
+					html+="</select>";
+					$("#issue").html(html);   
+				}
 			},  
 		});
 }
@@ -202,14 +333,14 @@ function subproject(){
 		url:"{% url 'subproject' %}",
 		method:"GET",
 		success:function(data){
-		console.log(data);
-		var html="<select id='subproject' name='subproject' class='form-control form-control-sm'><option>Select SubProjects</option>";
+		$("#subproject").show();
+		var html="<select id='sublist' name='sublist' class='form-control form-control-sm'><option>Select SubProjects</option>";
 		
 		for( a=0; a<data.result.length; a++){
 			html +="<option  value='"+data.result[a].id+"'>" +data.result[a].name +"</option>";
 		}
 		html+="</select>";
-		document.getElementById("subproject").innerHTML=html;   
+		$("#subproject").html(html);   
 		},  
 	});
 }
@@ -246,16 +377,17 @@ function getLog(id){
 function updateLog(){
 	id=$("#logid").val();
 	date=$("#date").val();
-	tasktype=$("#tasktype").val()
-	project = $("#subproject").val();
+	tasktype=$("#tasktype").val();
+	project=$("#sublist").val();
+	task=$("#issue_list").val();
 	hour=$("#hours").val()
 	work=$("#workdone").val()
 	billable=$("#billable").val();
 	csr =$("input[name=csrfmiddlewaretoken]").val();
-
-	data={id:id,date:date,tasktype:tasktype,subproject:project,workdone:work,hours:hour,billable:billable,action:'update',csrfmiddlewaretoken:csr}
+	alert(project);
+	data={id:id,date:date,tasktype:tasktype,sublist:project,issue_list:task,workdone:work,hours:hour,billable:billable,action:'update',csrfmiddlewaretoken:csr}
 	$.ajax({
-		url:"{% url 'add' %}",
+		url:"{% url 'addLog' %}",
 		data:data,
 		method:"POST",
 		success:function(data){

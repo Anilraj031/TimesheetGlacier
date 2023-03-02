@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import worklog, tasktype
 # Register your models here.
 class display(admin.ModelAdmin):
-    list_display=['id','User', 'Date', 'TaskType', 'project_id','Workdone', 'Hours', 'Billable',] 
+    list_display=['id','User', 'Date', 'TaskType', 'project_id','task','Workdone', 'Hours', 'Billable',] 
 
 class taskAdmin(admin.ModelAdmin):
     list_display = ('id','TaskType')

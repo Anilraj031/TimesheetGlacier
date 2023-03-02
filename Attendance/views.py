@@ -28,6 +28,10 @@ def attendance(request):
     else:
         return HttpResponseRedirect(reverse('login'))
 
+def getTodayAttendance(request):
+    data = Attendance.objects.filter(date=datetime.date.today(),user=request.user).values()
+    return JsonResponse({'result':list(data)})
+
 @csrf_exempt
 def getAttendance(request):
     month = request.POST['month']
@@ -92,7 +96,7 @@ def make_attendance(request):
             TrackAttendance.objects.filter(user=request.user).update(btn2=False)
         if exit != None:
             #attendance = Attendance(id=g_data.id,user=g_data.user,date=g_data.date,day=g_data.day,entry=g_data.entry,lbreak1=g_data.lbreak1,lbreak2=g_data.lbreak2,exit=exit,hour=hour,start_location=g_data.start_location,stop_location=stop_location)
-            Attendance.objects.filter(id=g_data.id).update(exit = exit, stop_location =stop_location)
+            Attendance.objects.filter(id=g_data.id).update(exit = exit,hour=hour, stop_location =stop_location)
             TrackAttendance.objects.filter(user=request.user).update(btn3=True,btn1=False)
         #attendance.save()
     else:
@@ -291,17 +295,6 @@ def attendancebyUser(request):
 
 
 
-def getHoursData(request):
-    gethour = Attendance.objects.filter(date__month=datetime.date.today().month).aggregate(Sum('hour'))
-    users = User.objects.all()
-    usr_hour = []
-    for x in users:
-        usr_hour.append({
-            'user':x.username,
-            'hour':Attendance.objects.filter(date__month=datetime.date.today().month,user = x.id).aggregate(Sum('hour'))
-        })
-    #print(usr_hour)
-    return JsonResponse({'totalHr':gethour,'users':usr_hour})
 
 @csrf_exempt
 def updateLeaveType(request):

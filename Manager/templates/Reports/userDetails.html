@@ -210,7 +210,7 @@
                         <div class="tab-pane" id="linkB" role="tabpanel" aria-labelledby="nav-linkB">
                           <div class="mt-2">
                             {% if projects.count == 0 %}
-                            <label>Not involved in any projects yet!</label>
+                            <label>No projects leaded !</label>
                             {% else %}
                             <table id="example" class="table table-hover text-left" style="width:100%">
                               <thead>
@@ -242,8 +242,72 @@
                             </table>
                             {% endif %}
                           </div>
+                          <div class="mt-2">
+                            {% if subprojects.count == 0 %}
+                            <label>Not involved in any projects !</label>
+                            {% else %}
+                            <label>Projects Involved !</label>
+                            <table id="example" class="table table-hover text-left table-sm" style="width:100%">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="col-sm-4">Name</th>
+                                  <th scope="col">Worked On</th>
+                                  <th>Customer</th>
+                                  <th>Task Lead By</th>
+                                  <th scope="col">Managed By</th>
+                                  <th>Hours Worked</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  {% for project in subprojects %}
+                                  <tr>
+                                      <td><a href="{% url 'projectDetails' pid=project.id %}">{{project.projectName}}</a></td>
+                                      <td>{{project.subproject}}</td>
+                                      <td>{{project.customer}}</td>
+                                      <td>{{project.leadby}}</td>
+                                      <td>{{project.managedby}}</td>
+                                      <td>{{project.hours}}</td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                            </table>
+                            {% endif %}
+                          </div>
                         </div>
-                        <div class="tab-pane" id="linkC" role="tabpanel" aria-labelledby="nav-linkC">Content of Link C</div>
+                        <div class="tab-pane" id="linkC" role="tabpanel" aria-labelledby="nav-linkC">
+                          <div class="mt-2">
+                            {% if task.count == 0 %}
+                            <label>Not involved in any tasks yet!</label>
+                            {% else %}
+                            <table id="example" class="table table-hover text-left table-sm" style="width:100%">
+                              <thead>
+                                <tr>
+                                  <th scope="col" class="col-sm-2">Name</th>
+                                  <th scope="col">Type</th>
+                                  <th scope="col">Customer</th>
+                                  <th>Created On</th>
+                                  <th scope="col">Last Modified</th>
+                                  <th scope="col">Priority</th>
+                                  <th>Hours</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                  {% for ts in task %}
+                                  <tr>
+                                      <td><a href="{% url 'issueDetails' issueid=ts.task.id %}">{{ts.task.ticket_name}}</a></td>
+                                      <td>{{ts.task.ticket_type}}</td>
+                                      <td>{{ts.task.affected_user}}</td>
+                                      <td>{{ts.task.open_date}}</td>
+                                      <td>{{ts.task.last_updated.date}}</td>
+                                      <td>{{ts.task.priority}}</td>
+                                      <td>{{ts.Hours}}</td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                            </table>
+                            {% endif %}
+                          </div>
+                        </div>
                         <div class="tab-pane" id="linkD" role="tabpanel" aria-labelledby="nav-linkD">Content of Link D</div>
                       </div>
                     </div>
@@ -269,7 +333,7 @@
           <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
         <div class="modal-body">
-          <table class="table table-hover text-center">
+          <table class="table table-hover text-center table-sm table-borderless">
             <thead>
               <tr>
                 <th>For</th>

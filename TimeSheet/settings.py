@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'Attendance',
     'Manager',
     'Project',
-    'emp_worklog'
+    'emp_worklog',
+    'Issue',
+    'Customer'
 ]
 
 MIDDLEWARE = [

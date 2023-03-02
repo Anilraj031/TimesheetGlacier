@@ -10,7 +10,9 @@ import numpy as np
 import re
 from emp_worklog.models import worklog
 from django.db.models import Sum
-from Project.models import Project
+from Project.models import Project,SubProject
+from Issue.models import Ticket
+from django.db.models import Count
 
 # Create your views here.
 def getDetails(request):
@@ -102,8 +104,31 @@ def viewUser(request,userId):
     #user work details
     issue = worklog.objects.filter(User=getUser,TaskType=1).count()
     totalIssue = worklog.objects.filter(TaskType=1).count()
-    totalProject = worklog.objects.filter(User=getUser,TaskType=2)
+    totalProjectCount = worklog.objects.filter(User=getUser,TaskType=2)
+    gettotalProject = worklog.objects.filter(User=getUser,TaskType=2)
+    totalProject = []
+    for x in gettotalProject:
+        if any(dictionary.get('sid') == x.project_id for dictionary in totalProject):
+            for index, dictionary in enumerate(totalProject):
+                if dictionary.get('sid') == x.project_id:
+                    hr = totalProject[index]['hours']
+                    hr += x.Hours
+                    totalProject[index]['hours']=hr
+        else:
+            totalProject.append({
+                'id':x.project_id.project.id,
+                'sid':x.project_id,
+                'projectName':x.project_id.project.name,
+                'subproject':x.project_id.name,
+                'customer':x.project_id.project.customer,
+                'leadby':x.project_id.assigned_to.username,
+                'managedby':x.project_id.project.manager.username,
+                'hours':x.Hours
+            })
+
     project = Project.objects.filter(manager=getUser)
+    task =worklog.objects.filter(User=getUser,TaskType=1)
+    
 
     hour = worklog.objects.filter(Billable=True).aggregate(Sum('Hours'))
     totalhour = Attendance.objects.filter(user=getUser).aggregate(Sum('hour'))
@@ -114,7 +139,7 @@ def viewUser(request,userId):
         'issue':issue,
         'totalIssue':totalIssue,
         'project':project.count(),
-        'totalProject':totalProject.count(),
+        'totalProject':totalProjectCount.count(),
         'hour':hour,
         'totalHour':totalhour,
         'leave':leave,
@@ -131,7 +156,9 @@ def viewUser(request,userId):
         'permissions':pid,
         'summary':details,
         'projects':project,
-        'hours':totalProject
+        'subprojects':totalProject,
+        #'hours':totalProject,
+        'task':task
     }
     #print(getUser.last_name)
     return render(request,'Reports/userDetails.html',data)
