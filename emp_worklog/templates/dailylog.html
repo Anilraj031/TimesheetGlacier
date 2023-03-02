@@ -9,7 +9,7 @@ table{
 
 {% endblock %}
 {% block content %} 
-    <div class="container">
+    <div class="">
         <div class="table-wrapper">
             <div class="table-title">
                 	<div class="row">	
@@ -19,53 +19,56 @@ table{
 						</div>
                 	</div>
             </div>
-			<h6 class="mt-4">This Week<h6>
-			<table class="table table-striped table-hover table-borderless shadow" id="thisweeklogTable">
-                <thead>
-                    <tr>
-						<th>Date</th>
-                        <th>User</th>
-                        <th>TaskType</th>
-						<th>Worked On</th>
-						<th>Priority</th>
-                        <th>Hours</th>
-                    	<th>Billable</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for d in thisweekdata %}
-                    <tr style="height:50px;opacity:0.8;" class="align-middle">
-						<td>{{d.Date}}</td>
-						<td>{{d.User}}</td>
-						<td>{{d.TaskType.TaskType}}</td>
-						<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
-						<td>
-							{% if d.TaskType.TaskType == 'Issue' %}
-							<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
-							{% endif %}
-						</td>
-						<td>{{d.Hours}}</td>
-						<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
-						<td>
-                            <a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
-							<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
-                        </td>
-                    </tr>
-					{% empty %}
-					<center><h5><b>The Records Not Found.</b></h5></center>
-                    {% endfor %}
-                </tbody>
-				<tfoot>
-					<tr>
-						<td colspan="5">Total</td>
-						<td colspan="3">
-							{{thisweektotal.Hours__sum}}
-						</td>
-					</tr>
-				</tfoot>
-            </table>
-			<h6 class="mt-4">Last Week<h6>
+			<div class=" table-responsive-sm">
+				<h6 class="mt-4">This Week<h6>
+				<table class="table table-striped table-hover table-borderless shadow" id="thisweeklogTable">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>User</th>
+							<th>TaskType</th>
+							<th>Worked On</th>
+							<th>Priority</th>
+							<th>Hours</th>
+							<th>Billable</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for d in thisweekdata %}
+						<tr style="height:50px;opacity:0.8;" class="align-middle">
+							<td>{{d.Date}}</td>
+							<td>{{d.User}}</td>
+							<td>{{d.TaskType.TaskType}}</td>
+							<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
+							<td>
+								{% if d.TaskType.TaskType == 'Issue' %}
+								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+								{% endif %}
+							</td>
+							<td>{{d.Hours}}</td>
+							<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
+							<td>
+								<a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
+								<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
+							</td>
+						</tr>
+						{% empty %}
+						<center><h5><b>The Records Not Found.</b></h5></center>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="5">Total</td>
+							<td colspan="3">
+								{{thisweektotal.Hours__sum}}
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			<div>
+			<div class=" table-responsive-sm">
+				<h6 class="mt-4">Last Week<h6>
 				<table class="table  table-striped table-hover table-borderless shadow" id="weeklogTable">
 					<thead>
 						<tr>
@@ -111,75 +114,78 @@ table{
 						</tr>
 					</tfoot>
 				</table>
-			<h6>This Month<h6>
-        	<table class="table table-striped table-hover" id="logTable">
-                <thead>
-                    <tr>
-						<th>Date</th>
-                        <th>User</th>
-                        <th>TaskType</th>
-						<th>Worked On</th>
-						<th>Priority</th>
-						<th>Status</th>
-                        <th>Hours</th>
-                    	<th>Billable</th>
-                        <th>Action</th>
+			</div>
+			<div class=" table-responsive-sm">
+				<h6>This Month<h6>
+				<table class="table table-striped table-hover" id="logTable">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>User</th>
+							<th>TaskType</th>
+							<th>Worked On</th>
+							<th>Priority</th>
+							<th>Status</th>
+							<th>Hours</th>
+							<th>Billable</th>
+							<th>Action</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for d in all_data %}
-                    <tr>
-						<td>{{d.Date}}</td>
-						<td>{{d.User}}</td>
-						<td>{{d.TaskType.TaskType}}</td>
-						<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
-						<td>
-							{% if d.TaskType.TaskType == 'Issue' %}
-							<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
-							{% endif %}
-						</td>
-						<td>
-							{% if d.TaskType.TaskType == 'Issue' %}
-							<span class="badge rounded-0 {% if d.task.state == 'New' %}text-bg-primary{% elif d.task.state == 'InProgress' %}text-bg-info{% elif d.task.state == 'Completed' %}text-bg-success{% elif d.task.state == 'Hold' %}text-bg-warning{% elif d.task.state == 'Canceled' %}text-bg-danger{% endif %}">{{d.task.state}}</span>
-							{% endif %}
-						</td>
-						<td>{{d.Hours}}</td>
-						<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
-						<td>
-                            <a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
-							<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
-                        </td>
-                    </tr>
-					{% empty %}
-					<center><h1><b>The Record Not Found.</b></h1></center>
-                    {% endfor %}
-                </tbody>
-            </table>
-			<div class="clearfix" style="display: flex; justify-content: right;">
-                {% comment %} <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div> {% endcomment %}
-                <nav aria-label="...">
-					<ul class="pagination">
-
-						{% if all_data.has_previous %}
-						{% comment %} <li class="page-item"><a href="/test1/?page=1" tabindex="-1">First</a></li> {% endcomment %}
-						<li class="page-item">
-							<a href="/Worklog/dailylog/?page={{all_data.previous_page_number}}"  class="page-link">Previous</a>
-						</li>
-						{% endif %}
-
-						{% for n in totalpage %}					
-						<li class="page-item"><a href="/Worklog/dailylog/?page={{n}}"  class="page-link">{{n}}</a></li>
-						{% comment %} <li class="page-item"><a href="#" class="page-link">2<span class="sr-only">(current)</span></a></li>
-						<li class="page-item"><a href="#" class="page-link">3</a></li> {% endcomment %}
+						</tr>
+					</thead>
+					<tbody>
+						{% for d in all_data %}
+						<tr>
+							<td>{{d.Date}}</td>
+							<td>{{d.User}}</td>
+							<td>{{d.TaskType.TaskType}}</td>
+							<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
+							<td>
+								{% if d.TaskType.TaskType == 'Issue' %}
+								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+								{% endif %}
+							</td>
+							<td>
+								{% if d.TaskType.TaskType == 'Issue' %}
+								<span class="badge rounded-0 {% if d.task.state == 'New' %}text-bg-primary{% elif d.task.state == 'InProgress' %}text-bg-info{% elif d.task.state == 'Completed' %}text-bg-success{% elif d.task.state == 'Hold' %}text-bg-warning{% elif d.task.state == 'Canceled' %}text-bg-danger{% endif %}">{{d.task.state}}</span>
+								{% endif %}
+							</td>
+							<td>{{d.Hours}}</td>
+							<td><input disabled class="form-check-input" type="checkbox" {% if d.Billable != True %}{% else %}Checked{% endif %} /></td>
+							<td>
+								<a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
+								<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
+							</td>
+						</tr>
+						{% empty %}
+						<center><h1><b>The Record Not Found.</b></h1></center>
 						{% endfor %}
+					</tbody>
+				</table>
+				<div class="clearfix" style="display: flex; justify-content: right;">
+					{% comment %} <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div> {% endcomment %}
+					<nav aria-label="...">
+						<ul class="pagination">
 
-						{% if all_data.has_next %}
-						<li class="page-item"><a href="/Worklog/dailylog/?page={{all_data.next_page_number}}" class="page-link">Next</a></li>
-						{% endif %}
-                	</ul>
-				</nav>
-            </div> 
+							{% if all_data.has_previous %}
+							{% comment %} <li class="page-item"><a href="/test1/?page=1" tabindex="-1">First</a></li> {% endcomment %}
+							<li class="page-item">
+								<a href="/Worklog/dailylog/?page={{all_data.previous_page_number}}"  class="page-link">Previous</a>
+							</li>
+							{% endif %}
+
+							{% for n in totalpage %}					
+							<li class="page-item"><a href="/Worklog/dailylog/?page={{n}}"  class="page-link">{{n}}</a></li>
+							{% comment %} <li class="page-item"><a href="#" class="page-link">2<span class="sr-only">(current)</span></a></li>
+							<li class="page-item"><a href="#" class="page-link">3</a></li> {% endcomment %}
+							{% endfor %}
+
+							{% if all_data.has_next %}
+							<li class="page-item"><a href="/Worklog/dailylog/?page={{all_data.next_page_number}}" class="page-link">Next</a></li>
+							{% endif %}
+						</ul>
+					</nav>
+				</div> 
+			</div>
         </div>
     </div>
 
