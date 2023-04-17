@@ -12,7 +12,8 @@ urlpatterns= [
     path('edit', views.EDIT, name ='edit'),
     path('update/<str:id>', views.Update, name= 'Update'),
     path('delete/<id>', views.DELETE, name = 'delete'),
-    path('donestatus ', views.Done, name='done')
+    path('donestatus ', views.Done, name='done'),
+    path('updateStatus',views.updateStatus,name='updateTicketStatus'),
    
 ]
 

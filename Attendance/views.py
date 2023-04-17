@@ -1,28 +1,40 @@
 from django.shortcuts import render
 from django.http import JsonResponse,HttpResponseRedirect, HttpResponse
 from Attendance.models import Attendance, Leave, LeaveType,User,TrackAttendance
+from Authentication.models import userDetails
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 import datetime
 from geopy.geocoders import Nominatim
 from django.db.models import Sum
+from math import radians, cos, sin, asin, sqrt
 
 # Create your views here.
 def attendance(request):
     if request.user.is_authenticated:
         allusers =User.objects.all().values('id','username')
         btnTrack=TrackAttendance.objects.get(user=request.user)
+        attenType = userDetails.objects.get(user=request.user)
         #print(btnTrack)
+        #getDistance(request) #distance calculator
         date = datetime.date.today()
         if request.user.is_superuser:
             result = Attendance.objects.filter(date__year=date.year,date__month =date.month,user=request.user) # 1=january
         else:
             result = Attendance.objects.filter(date__year=date.year,date__month =date.month, user=request.user)
         #print(result)
+        gettoday = Attendance.objects.filter(user=request.user,date=date)
+        #print(gettoday.first())
+        if gettoday.first() != None:
+            today = gettoday.first()
+        else :
+            today = "None"
         data = {
             'result': result,
             'users' :allusers,
-            'btn' :btnTrack
+            'btn' :btnTrack,
+            'attendanceType':attenType,
+            'today':today
         }
         return render(request, 'Attendance/attendance.html',data)
     else:
@@ -326,3 +338,35 @@ def getLeaveType(request):
     print(id)
     leave=LeaveType.objects.get(id=id)
     return JsonResponse({'result':leave.days})
+
+
+def getDistance(request):
+    #LoA = radians(LoA) 
+    #LoB = radians(LoB) 
+    #LaA= radians(LaA) 
+    #LaB = radians(LaB)
+
+
+    #test by anil 
+    LaA = 38.63
+    LaB = 39.95
+    LoA = -90.19
+    LoB = -75.14
+    # The "Haversine formula" is used.
+    D_Lo = LoB - LoA
+    D_La = LaB - LaA
+    P = sin(D_La / 2)**2 + cos(LaA) * cos(LaB) * sin(D_Lo / 2)**2 
+   
+    Q = 2 * asin(sqrt(P))  
+    # The earth's radius in kilometers.
+    R_km = 6371 
+    # Then we'll compute the outcome.
+    print ("The distance between St Louis and Philadelphia is: ", Q * R_km, "K.M") 
+    #return(Q * R_km)
+    return True
+
+    LaA = 38.63
+    LaB = 39.95
+    LoA = -90.19
+    LoB = -75.14
+    print ("The distance between St Louis and Philadelphia is: ", distance_d(LaA, LaB, LoA, LoB), "K.M") 

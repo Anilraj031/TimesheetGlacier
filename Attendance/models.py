@@ -11,6 +11,7 @@ class Attendance(models.Model):
     lbreak2 = models.CharField(max_length=50,null=True)
     exit = models.CharField(max_length=50, null=True)
     hour = models.CharField(max_length=50, null=True)
+    type = models.CharField(max_length=50,null=True,default=None)
     start_location = models.CharField(max_length=500, null=True)
     stop_location = models.CharField(max_length=500, null=True)
 

@@ -5,6 +5,16 @@
 table{
 	font-weight:normal !important;
 }
+
+thead > tr > th{
+	opacity:0.6 !important;
+}
+.table-wrapper{
+	
+}
+.modal-content{
+	background-color:GhostWhite !important;
+}
 </style>
 
 {% endblock %}
@@ -15,20 +25,29 @@ table{
                 	<div class="row">	
 						<div class="col-md-8">				
 							<!-- <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Record</span></a> -->
-							<a id="logBtn" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addLog">Add Log</a>
+							<a id="logBtn" class="btn btn-success btn-sm ps-4 pe-4 rounded-1" data-bs-toggle="modal" data-bs-target="#addLog" style="float:left;">Add Log</a>
+							{% if user.is_superuser %}
+								<select class="form-control form-control-sm col-xs-2 w-25 rounded-0" id="user_s" onchange="getMonthData()">
+									<option value="{{user.id}}">{{user.username}}</option>
+									{% for n in users %}
+									{% if n.username != user.username %}
+										<option class="active" value="{{n.id}}">{{n.username}}</option>
+									{% endif %}
+									{% endfor %}
+									<option value="0">all</option>
+								</select>
+							{% endif %}
 						</div>
                 	</div>
             </div>
 			<div class=" table-responsive-sm">
-				<h6 class="mt-4">This Week<h6>
+				<p class="mt-4">This Week</p>
+				{% if thisweekdata %}
 				<table class="table table-striped table-hover table-borderless shadow" id="thisweeklogTable">
 					<thead>
-						<tr>
+						<tr class="align-middle ">
 							<th>Date</th>
-							<th>User</th>
-							<th>TaskType</th>
-							<th>Worked On</th>
-							<th>Priority</th>
+							<th class="w-50">Worked On</th>
 							<th>Hours</th>
 							<th>Billable</th>
 							<th>Action</th>
@@ -38,12 +57,10 @@ table{
 						{% for d in thisweekdata %}
 						<tr style="height:50px;opacity:0.8;" class="align-middle">
 							<td>{{d.Date}}</td>
-							<td>{{d.User}}</td>
-							<td>{{d.TaskType.TaskType}}</td>
-							<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
-							<td>
+							<td class="w-25">
+								{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}<span class="badge bg-light text-dark ms-4">{{d.TaskType.TaskType}}</span>
 								{% if d.TaskType.TaskType == 'Issue' %}
-								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+								<span class="badge rounded-1 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
 								{% endif %}
 							</td>
 							<td>{{d.Hours}}</td>
@@ -53,30 +70,29 @@ table{
 								<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
 							</td>
 						</tr>
-						{% empty %}
-						<center><h5><b>The Records Not Found.</b></h5></center>
 						{% endfor %}
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="5">Total</td>
+							<td colspan="2">Total</td>
 							<td colspan="3">
 								{{thisweektotal.Hours__sum}}
 							</td>
 						</tr>
 					</tfoot>
 				</table>
+				{% else %}
+				<div class="align-center text-center text-secondary">No Record Found For This Week!</div>
+				{% endif %}
 			<div>
-			<div class=" table-responsive-sm">
-				<h6 class="mt-4">Last Week<h6>
-				<table class="table  table-striped table-hover table-borderless shadow" id="weeklogTable">
+			<div class=" table-responsive-sm mt-2">
+				<p class="mt-2">Last Week</p>
+				{% if lastweekdata %}
+				<table class="table  table-striped table-hover table-borderless shadow" id="weeklogTable" style="border-spacing: 0 10px;">
 					<thead>
 						<tr>
 							<th>Date</th>
-							<th>User</th>
-							<th>TaskType</th>
-							<th>Worked On</th>
-							<th>Priority</th>
+							<th class="w-50">Worked On</th>
 							<th>Hours</th>
 							<th>Billable</th>
 							<th>Action</th>
@@ -84,14 +100,12 @@ table{
 					</thead>
 					<tbody>
 						{% for d in lastweekdata %}
-						<tr>
+						<tr style="height:50px;opacity:0.8;" class="align-middle">
 							<td>{{d.Date}}</td>
-							<td>{{d.User}}</td>
-							<td>{{d.TaskType.TaskType}}</td>
-							<td>{% if d.project_id != None %}<a href="{% url 'projectDetails' pid=d.project_id.id%}">{{d.project_id.name}}{% else %}<a href="{% url 'issueDetails' issueid=d.task.id %}">{{d.task.ticket_name}} {% endif %}</a></td>
-							<td>
+							<td class="w-25">
+								{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}<span class="badge bg-light text-dark ms-4">{{d.TaskType.TaskType}}</span>
 								{% if d.TaskType.TaskType == 'Issue' %}
-								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
+								<span class="badge rounded-1 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
 								{% endif %}
 							</td>
 							<td>{{d.Hours}}</td>
@@ -99,46 +113,44 @@ table{
 							<td>
 								<a onclick="getLog({{d.id}})"><i class="fas fa-solid fa-pen text-primary"></i></a>
 								<a  data-bs-toggle="modal" data-bs-target="#deleteLog"><i class="fas fa-sharp fa-solid fa-trash text-danger"></i></a>
+								<a ><i class="fas fa-sticky-note text-primary"></i></a>
 							</td>
 						</tr>
-						{% empty %}
-						<center><h5><b>The Records Not Found.</b></h5></center>
 						{% endfor %}
 					</tbody>
 					<tfoot>
 						<tr>
-							<td colspan="5">Total</td>
+							<td colspan="2">Total</td>
 							<td colspan="3">
 								{{lastweektotal.Hours__sum}}
 							</td>
 						</tr>
 					</tfoot>
 				</table>
+				{% else %}
+				<div class="align-center text-center text-secondary">No Record Found For Last Week!</div>
+				{% endif %}
 			</div>
-			<div class=" table-responsive-sm">
-				<h6>This Month<h6>
-				<table class="table table-striped table-hover" id="logTable">
+			<div class=" table-responsive-sm mt-4">
+				<p>This Month</p>
+				<table class="table  table-sm table-hover table-light shadow" id="logTable" style="border-spacing: 0 5px;">
 					<thead>
 						<tr>
-							<th>Date</th>
-							<th>User</th>
-							<th>TaskType</th>
-							<th>Worked On</th>
-							<th>Priority</th>
-							<th>Status</th>
-							<th>Hours</th>
-							<th>Billable</th>
-							<th>Action</th>
+							<th scope="col" class="">Date</th>
+							<th scope="col" class="w-50">Worked On</th>
+							<th scope="col">Priority</th>
+							<th scope="col">Status</th>
+							<th scope="col">Hours</th>
+							<th scope="col">Billable</th>
+							<th scope="col">Action</th>
 
 						</tr>
 					</thead>
-					<tbody>
+					<tbody >
 						{% for d in all_data %}
-						<tr>
+						<tr class="" style="height:50px;font-weight:400;font-color:red;">
 							<td>{{d.Date}}</td>
-							<td>{{d.User}}</td>
-							<td>{{d.TaskType.TaskType}}</td>
-							<td>{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}</td>
+							<td class="w-25">{% if d.project_id != None %}{{d.project_id.name}}{% else %}{{d.task.ticket_name}} {% endif %}<span class="badge bg-light text-dark ms-4">{{d.TaskType.TaskType}}</span></td>
 							<td>
 								{% if d.TaskType.TaskType == 'Issue' %}
 								<span class="badge rounded-0 {% if d.task.priority == 'high' %}text-bg-danger{% elif d.task.priority == 'medium' %}text-bg-info{% elif d.task.priority == 'low' %}text-bg-primary{% endif %}">{{d.task.priority}}</span>
@@ -157,7 +169,7 @@ table{
 							</td>
 						</tr>
 						{% empty %}
-						<center><h1><b>The Record Not Found.</b></h1></center>
+						<center><h1><b>Record Not Found.</b></h1></center>
 						{% endfor %}
 					</tbody>
 				</table>
@@ -195,22 +207,22 @@ table{
 	<!-- Add Modal HTML -->
 	<div class="modal fade" id="addLog" tabindex="-1" role="dialog" aria-labelledby="addLogLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-			<div class="modal-content rounded-0">
+			<div class="modal-content rounded-0 container">
 				<form action="{% url 'addLog' %}" method="POST" id="LogForm">
 					{% csrf_token %}
 					<input type="hidden" id="logid" />
 					<div class="modal-header">						
-						<h4 class="modal-title">Add Record</h4>
+						<h5 class="modal-title text-secondary fw-bolder">Add Record</h5>
 						<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body ps-5 pe-5">
 						<div class="form-group row">
-							<label class="col-3">Date</label>							
-							<input name="date" id="date" type="date" class="form-control form-control-sm w-25 col-9 userfm" required>
+							<label class="col-3 text-secondary">Date</label>							
+							<input name="date" id="date" type="date" class="form-control form-control-sm w-25 col-9 userfm rounded-0" required>
 						</div>
 						<div class="form-group row mt-2">
-							<label class="col-3">TaskType</label>
-							<select name="tasktype" id="tasktype" class="form-control form-control-sm w-25 userfm" id="exampleFormControlSelect1" onchange="gettask()" required>
+							<label class="col-3 text-secondary">TaskType</label>
+							<select name="tasktype" id="tasktype" class="form-control form-control-sm w-25 userfm rounded-0" id="exampleFormControlSelect1" onchange="gettask()" required>
 								<option value="">Select</option>
 								{% for n in tasktype %}
 								<option value="{{n.id}}">{{n.TaskType}}</option>
@@ -221,21 +233,21 @@ table{
 							<span class="col" id="subproject"></span>
 						</div>
 						<div class="form-group row mt-2">
-							<label class="col-3">Hours</label>
-							<input name="hours" id="hours" type="number" class="form-control form-control-sm col-9 w-25 userfm" required>
+							<label class="col-3 text-secondary">Hours</label>
+							<input name="hours" id="hours" type="number" class="form-control form-control-sm col-9 w-25 userfm rounded-0" required>
 						</div>
 						<div class="form-group row">
-								<label class="col-3">Billable</label>
-								<input name="billable" id="billable" class="form-check-input col-9 rounded-1" type="checkbox">								
+								<label class="col-3 text-secondary">Billable</label>
+								<input name="billable" id="billable" class="form-check-input col-9 rounded-0" type="checkbox">								
 						</div>
 						<div class="form-group row mt-2">
-							<label class="col-3">Workdone</label>
+							<label class="col-3 text-secondary">Workdone</label>
 							<div class="col-9 p-0 pe-2">
-								<textarea name="workdone" id="workdone" class="form-control userfm" rows="5" required></textarea>
+								<textarea name="workdone" id="workdone" class="form-control userfm rounded-0" rows="5" required></textarea>
 							</div>
 						</div>				
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer pe-5">
 						<input type="button" class="btn btn-info btn-sm" data-bs-dismiss="modal" aria-label="Close" value="Cancel">
 						<input id="btnSave" type="submit" class="btn btn-success btn-sm" value="Save">
 						<a id="btnUpdate" class="btn btn-success btn-sm" onclick="updateLog()">Update</a>

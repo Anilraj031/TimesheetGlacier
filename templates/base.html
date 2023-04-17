@@ -20,27 +20,44 @@
     {% block script %}
     {% endblock %}
     <style>
+        .dropdown-toggle:after {
+            display: none !important;
+           }
+
       thead{
-        background-color:cornflowerblue !important;
+        background-color:aliceblue !important;
       }
+      th{
+        font-weight:600 !important;
+        }
       tbody tr{
         opacity:0.8;
         border-top:1px solid lightgray;
         border-bottom:1px solid lightgray;
       }
 
+        .navbar,.sb-sidenav{
+            background-color:DodgerBlue important;
+        }
+
       .form-control:focus {
         box-shadow: none !important;
+        border:1px solid lightgrey important;
       }
 
+      #sidebarToggle:focus {
+         box-shadow: none !important;
+         border:1px solid lightgrey !important;
+         border-radius:3px !important;
+      }
       .btn{
       outline: none;
       cursor: pointer;
-      border: none;
+      border: none !important;
       display: block;
       position: relative;
-      font-size: 16px;
-      font-weight: 200;
+      font-size: 16px ;
+      font-weight: 600 !important;
       color: #fff;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -48,10 +65,10 @@
       /* primary button */
       .btn-primary{
       background-color: #0275d8;
-      box-shadow: 0 4px #052341;
+      box-shadow: 0 2px #052341;
       }
       .btn-primary:hover{
-      box-shadow: 0 2px #052341;
+      box-shadow: 0 4px #052341;
       top: 2px;
       }
       .btn-primary:active{
@@ -60,7 +77,7 @@
       }
       /* success button */
       .btn-success{
-      background-color: #5cb85c;
+      background-color: #1cbb8c !important;
       box-shadow: 0 4px #1B371C;
       }
       .btn-success:hover{
@@ -141,9 +158,9 @@
     </style>
 </head>
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand-sm navbar-dark bg-primary">
+    <nav class="sb-topnav navbar navbar-expand-sm navbar-light bg-light fixed-top" style=" box-shadow: 5px 1px 5px #888888;">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="{% url 'home' %}">{{request.session.company}}</a>
+        <a class="navbar-brand ps-3 bg-light" href="{% url 'home' %}">{{request.session.company}}</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-2 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         
@@ -154,8 +171,20 @@
                 <button class="btn btn-info" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
             </div>
         </form>
+        <!-- Nav Item - Alerts -->
+        <ul class="navbar-nav ms-auto ms-md-0 ">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fas fa-bell"></i><span class="badge badge-sm badge-danger badge-counter bg-danger rounded-circle " style="margin-left:-10px;">3</span></a>
+                <ul class="dropdown-menu dropdown-menu-end rounded-0" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#">
+                        <i class="fas fa-bell mr-2 text-gray-400"></i>
+                        Profile
+                    </a></li>
+                </ul>
+            </li> 
+        </ul>
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <ul class="navbar-nav  ms-md-0 me-3 me-lg-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end rounded-0" aria-labelledby="navbarDropdown">
@@ -181,10 +210,10 @@
     </nav>
     <div id="layoutSidenav" >
         <div id="layoutSidenav_nav" >
-            <nav class="sb-sidenav accordion sb-sidenav-dark bg-primary" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
+                <div class="sb-sidenav-menu" >
                     <div class="nav">
-                        <a class="nav-link" href="{% url 'home' %}">
+                        <a class="nav-link mt-4" href="{% url 'home' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -256,8 +285,8 @@
                 </div>
             </nav>
         </div>
-        <div id="layoutSidenav_content" style="background-color: #eaecf4;">
-            <main class="p-4">
+        <div id="layoutSidenav_content" style="background-color:GhostWhite;">
+            <main class="p-5">
                 {% block content %}
 
                 {% endblock %}

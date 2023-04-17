@@ -3,6 +3,8 @@ from django.shortcuts import redirect
 from . models import Ticket
 from Attendance.models import User
 from Customer.models import employee
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 # Create your views here.
 # function based views
@@ -116,4 +118,19 @@ def DELETE(request,id):
 def done(request):
     return redirect(request, 'allIssues.html' )
 
-
+@csrf_exempt
+def updateStatus(request):
+    status=request.POST['status']
+    id=request.POST['id']
+    print(status)
+    if status == 'new':
+        Ticket.objects.filter(id=id).update(state='New')
+    elif status == 'inprogress':
+        Ticket.objects.filter(id=id).update(state='InProgress')
+    elif status == 'hold':
+        Ticket.objects.filter(id=id).update(state='Hold')
+    elif status == 'complete':
+        Ticket.objects.filter(id=id).update(state='Completed')
+    else:
+        Ticket.objects.filter(id=id).update(state='Canceled')
+    return JsonResponse({'result':"success"})

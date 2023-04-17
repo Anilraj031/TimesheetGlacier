@@ -60,6 +60,7 @@ def dailylog(request):
     lastMonday2 = today + relativedelta(weekday=MO(-2))
     lastweekdata = worklog.objects.filter(User = request.user,Date__range=(lastMonday2,lastMonday-timedelta(days=1)))
     
+    allusers =User.objects.all().values('id','username')
     # This is for search
     if request.method=="GET":
         username=request.GET.get('searching')
@@ -82,7 +83,8 @@ def dailylog(request):
 
         # pagination
         'all_data':page_datafinal,
-        'totalpage':[n+1 for n in range(totalpage)]
+        'totalpage':[n+1 for n in range(totalpage)],
+        'users':allusers
     }
     #print(context)
     return render(request, 'dailylog.html', context)

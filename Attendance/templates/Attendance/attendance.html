@@ -15,7 +15,11 @@
 <script>
 $(document).ready(function(){
     is_admin = '{% if user.is_superuser %}True{% else %}False{% endif %}';
-    getLocation();
+    checkAType = '{{attendanceType.attendanceType}}'
+    if(checkAType == 'Physical')
+    {
+      getLocation();
+    }
   });
 //gte latitude and longitude
 //location
@@ -58,14 +62,82 @@ function showError(error) {
     <h1 class="display-1 text-success"><span id="trackTime">00:00:00</span></h1>
     
     <div class="text-center">
-      <button name="start" class="btn btn-lg btn-primary ps-5 pe-5" style="display:{% if btn.btn1 == True %}none;{% elif btn.btn1 == False %}; {% endif %}" onclick="make_attendance('start')" id="btnstart">Start</button>
+      <button name="start1" class="btn btn-lg btn-primary ps-5 pe-5" style="display:{% if btn.btn1 == True %}none;{% elif btn.btn1 == False %}; {% endif %}" onclick="make_attendance('start')" id="btnstart">Start</button>
       <button name="reset" class="btn btn-lg btn-danger ps-5 pe-5" style="display:{% if btn.btn3 == True %}none;{% elif btn.btn3 == False %}; {% endif %}" onclick="make_attendance('stop')" id="btnstop">End</button>
       <button name="stop" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == True %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('break')" id="btnbreak1">Time Off</button>
       <button name="start" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == False %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('resume')" id="btnbreak2">Continue</button>
     </div>
   </div>
-  
+  <hr>
+  <div class="row">
+    <p>Today</p>
+    <div class="col-xl-3 col-md-6 mb-8 ">
+      <div class="card border-left shadow h-100 py-2 bg-gradient-success text-light rounded-0">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                          <h6>Started At</h6></div>
+                      <div class="h6 mb-0 font-weight-bold text-gray-800 ml-2"><span id="startedTime">{% if today != "None" %}{{today.entry}}{% endif %}</span></div>
+                  </div>
+                  <div class="col-auto">
+                    
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-8">
+      <div class="card border-left shadow h-100 py-2 bg-gradient-warning text-light rounded-0">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                          <h6>Break Started</h6></div>
+                      <div class="h6 mb-0 font-weight-bold text-gray-800 ml-2"><span id="breakstartedTime">{% if today.lbreak1 != None %}{{today.lbreak1}}{% endif %}</span></div>
+                  </div>
+                  <div class="col-auto">
+                   
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-8">
+      <div class="card border-left shadow h-100 py-2 bg-gradient-warning text-light rounded-0">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                          <h6>Break End</div>
+                      <div class="h6 mb-0 font-weight-bold text-gray-800 ml-2"><span id="breakendTime">{% if today.lbreak2 != None %}{{today.lbreak2}}{% endif %}</span></div>
+                  </div>
+                  <div class="col-auto">
+                   
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-8">
+      <div class="card border-left shadow h-100 py-2 bg-gradient-danger text-light rounded-0">
+          <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">
+                          <h6>Leave</div>
+                      <div class="h6 mb-0 font-weight-bold text-gray-800 ml-2"><span id="leaveTime">{% if today.exit != None %}{{today.exit}}{% endif %}</span></div>
+                  </div>
+                  <div class="col-auto">
+                   
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
   <div class="row mt-4">
+    <p>History</p>
     <div class="text-right w-50">
       {% csrf_token %}
     <select class="form-control form-control-sm w-25" id="year" style="float:left;" onchange="getMonthData()">
@@ -211,15 +283,17 @@ function showError(error) {
       var data='';
       if(type == 'start')
       {
-        if(mylocation != '')
+        if(mylocation != '' || checkAType =='Remote')
         {
           //alert(mylocation);
           data ={date:f_date,day:day,entry:time1,start_location:mylocation,btn:1};
           $("#btnstart").hide();
           $("#btnbreak1").show();
           $("#btnstop").show();
+          startTimer();
         }
         else{
+          //alert('{{attendanceType.attendanceType}}');
           alert(locationError);
         }
       }
@@ -230,6 +304,7 @@ function showError(error) {
           data ={date:f_date,lbreak1:time1,btn:2};
           $("#btnbreak1").hide();
           $("#btnbreak2").show();
+          $("#breakstartedTime").text(time1);
         }
         else{alert("You haven't started your work hours yet!")}
         
@@ -239,6 +314,7 @@ function showError(error) {
         data ={date:f_date,lbreak2:time1,btn:3};
         $("#btnbreak1").show();
         $("#btnbreak2").hide();
+        $("#breakendTime").text(time1);
       }
       if(type =='stop'){
         time = $('#trackTime').text();
@@ -247,6 +323,7 @@ function showError(error) {
         w_hour = get_h+':'+get_m;
         //alert(mylocation);
         data ={date:f_date,exit:time1,hour:w_hour,stop_location:mylocation,btn:4};
+        $("#leaveTime").text(time1);
        
         var isHidden = $('#btnbreak2').is(':hidden');
         if( isHidden != false)
@@ -281,6 +358,7 @@ function showError(error) {
               }
               dataset.push(dataset1);
               dataset1=[];
+              $("#startedTime").text(time1);
             }
             //console.log(dataset1)
             var table = $('#example').DataTable();
@@ -457,7 +535,7 @@ function showError(error) {
       $("[name='time']").val(formatTime(elapsed));
     }
   
-    $("[name='start']").click(startTimer);
+    //$("[name='start']").click(startTimer);
     $("[name='stop']").click(pauseTimer); 
     $("[name='reset']").click(resetTimer);
     $("[name='Check']").click(checkTimer);
@@ -481,5 +559,10 @@ function showError(error) {
       
       return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
       }
-</script>
+
+    function request()
+    {
+      alert("requestred");
+    }
+    </script>
 {% endblock %}
