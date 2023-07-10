@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+<<<<<<< HEAD
 from . models import Ticket,ticketDetails
+=======
+from . models import Ticket
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 from Attendance.models import User
 from Customer.models import employee
 from django.views.decorators.csrf import csrf_exempt
@@ -11,25 +15,39 @@ from django.http import JsonResponse
 def index(request):
     allusers =User.objects.all().values('id','username')
     ticket = Ticket.objects.all()
+<<<<<<< HEAD
     mytickets = Ticket.objects.filter(assigned_to= request.user)
+=======
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
     customer = employee.objects.all().values()
     #print(customer)
     dic = {
         'ticket':ticket,
         'users':list(allusers),
+<<<<<<< HEAD
         'customer':list(customer),
         'mytickets':mytickets
+=======
+        'customer':list(customer)
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
         }
     return render(request, 'Issues/allIssues.html', dic)
 
 def getIssue(request,issueid):
     issue = Ticket.objects.get(id=issueid)
+<<<<<<< HEAD
     issueComments = ticketDetails.objects.filter(ticket_id = issueid)
     allusers =User.objects.all().values('id','username')
     customer = employee.objects.all().values()
 
     #print(issueComments)
     return render(request, 'Issues/details.html',{'issue':issue,'users':allusers,'customer':customer,'comments':issueComments})
+=======
+    allusers =User.objects.all().values('id','username')
+    customer = employee.objects.all().values()
+    #print(allusers)
+    return render(request, 'Issues/details.html',{'issue':issue,'users':allusers,'customer':customer})
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 
 def ADD(request):
     if request.method == "POST":
@@ -85,7 +103,10 @@ def Update(request,id):
         assTo = request.POST.get('assTo')
         email = request.POST.get('email')
         comments = request.POST.get('comments')
+<<<<<<< HEAD
         
+=======
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 
     tickets = Ticket(
             id = id,
@@ -95,7 +116,11 @@ def Update(request,id):
             open_date= dateOpened,
             affected_user= employee.objects.get(id=affUser),
             priority= priority,
+<<<<<<< HEAD
             state = state,
+=======
+            state= state,
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
             assigned_grp= assGroup,
             assigned_to= User.objects.get(id=assTo),
             email= email,
@@ -138,6 +163,7 @@ def updateStatus(request):
         Ticket.objects.filter(id=id).update(state='Completed')
     else:
         Ticket.objects.filter(id=id).update(state='Canceled')
+<<<<<<< HEAD
     return JsonResponse({'result':"success"})
 
 @csrf_exempt
@@ -153,3 +179,6 @@ def addComments(request):
         
         getComment = ticketDetails.objects.last()
         return JsonResponse({'date':getComment.date.strftime("%B %d, %Y %I:%M %p"),'comment':getComment.comments,'user':getComment.user.username})
+=======
+    return JsonResponse({'result':"success"})
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06

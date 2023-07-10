@@ -182,9 +182,13 @@ def viewUser(request,userId):
         'projects':project,
         'subprojects':totalProject,
         #'hours':totalProject,
+<<<<<<< HEAD
         'task':task,
         'loginType':loginType,
         'manager':is_manager[1]
+=======
+        'task':task
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
     }
     #print(getUser.last_name)
     return render(request,'Reports/userDetails.html',data)

@@ -13,7 +13,11 @@ class userCompAdmin(admin.ModelAdmin):
     list_display = ('company','user')
 
 class uDetails(admin.ModelAdmin):
+<<<<<<< HEAD
     list_display = ('user','attendanceType','mrequest')
+=======
+    list_display = ('user','attendanceType')
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 
 admin.site.register(userDetails,uDetails)
 admin.site.register(Employees,userCompAdmin)

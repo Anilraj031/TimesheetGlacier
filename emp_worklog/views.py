@@ -12,10 +12,13 @@ from dateutil.relativedelta import relativedelta,MO
 from django.db.models import Sum
 from django.contrib.auth.models import User
 from Customer.models import customer
+<<<<<<< HEAD
 from Manager.views import checkTeams
 from django.views.decorators.csrf import csrf_exempt
 
 
+=======
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 # Create your views here.
 def dailylog1(request):
     all_data=worklog.objects.all()
@@ -46,12 +49,17 @@ def enterrecord(request):
 def addrecord(request):
     return render(request, 'addrecord.html')
 
+<<<<<<< HEAD
 @csrf_exempt
 def dailylog(request):
     #view list of users if users is admin or team leader
     getTeam_users = checkTeams(request)
     allusers = User.objects.filter(pk__in=getTeam_users[0])
     
+=======
+def dailylog(request):
+    all_data=worklog.objects.filter(User = request.user)
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
     task =tasktype.objects.all().values()
 
     date = datetime.today().weekday()
@@ -62,14 +70,32 @@ def dailylog(request):
     lastMonday = today + relativedelta(weekday=MO(-1))
     nextMonday = today + relativedelta(weekday=MO(1))
     
+<<<<<<< HEAD
     
     all_data=worklog.objects.filter(User = request.user,Date__month=today.month)
     # pagination
+=======
+    thisweekdata = worklog.objects.filter(User = request.user,Date__range=(lastMonday,nextMonday))
+    #print(weekdata)
+    #for last weeks log
+    lastMonday2 = today + relativedelta(weekday=MO(-2))
+    lastweekdata = worklog.objects.filter(User = request.user,Date__range=(lastMonday2,lastMonday-timedelta(days=1)))
+    
+    allusers =User.objects.all().values('id','username')
+    # This is for search
+    if request.method=="GET":
+        username=request.GET.get('searching')
+        if username!=None:
+            all_data=worklog.objects.filter(User__icontains=username)
+
+    # paginatio
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
     paginator=Paginator(all_data,10)
     page_number=request.GET.get('page')
     page_datafinal=paginator.get_page(page_number)
     totalpage=page_datafinal.paginator.num_pages
 
+<<<<<<< HEAD
     if request.method == 'POST':
         user = request.POST.get('id')
         thisweekdata = worklog.objects.filter(User = user,Date__range=(lastMonday,nextMonday))
@@ -146,6 +172,23 @@ def get_project_or_task_empty(request,id,type):
             name1 = Ticket.objects.get(id=id)
             name=name1.priority
     return name
+=======
+    context= {
+        'all_data':all_data, 
+        'tasktype':task,
+        'lastweekdata':lastweekdata,
+        'lastweektotal':lastweekdata.aggregate(Sum('Hours')),
+        'thisweekdata':thisweekdata,
+        'thisweektotal':thisweekdata.aggregate(Sum('Hours')),
+
+        # pagination
+        'all_data':page_datafinal,
+        'totalpage':[n+1 for n in range(totalpage)],
+        'users':allusers
+    }
+    #print(context)
+    return render(request, 'dailylog.html', context)
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 
 # This is for adding record
 def ADD(request):
@@ -254,6 +297,10 @@ def getMonthlyHours(request):
     year = datetime.today().year
     month = datetime.today().month
     
+<<<<<<< HEAD
+=======
+
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
     data = {}
     keys = range(1,13)
     for i in keys:
@@ -277,6 +324,7 @@ def getHoursData(request):
         })
     
     achievedhr = worklog.objects.filter(Date__month=datetime.today().month,Billable=True).aggregate(Sum('Hours')).get('Hours__sum', 0.00)
+<<<<<<< HEAD
     return JsonResponse({'requiredHr':gethour,'users':usr_hour,'hour':achievedhr})
 
 
@@ -286,3 +334,6 @@ def getLogByUsers(request):
         u_id = request.POST.get('id')
 
     return JsonResponse({'result':'success'})
+=======
+    return JsonResponse({'requiredHr':gethour,'users':usr_hour,'hour':achievedhr})
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06

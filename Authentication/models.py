@@ -5,7 +5,10 @@ from django.contrib.auth.models import User
 class userDetails(models.Model):
     user = models.ForeignKey(User, null=True, on_delete= models.SET_NULL)
     attendanceType = models.CharField(max_length=100,null=True,default="Physical")
+<<<<<<< HEAD
     mrequest = models.BooleanField("Request", default=False, null=True)
+=======
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
 
 class Company(models.Model):
     user = models.ForeignKey(User, null=True, on_delete= models.SET_NULL)

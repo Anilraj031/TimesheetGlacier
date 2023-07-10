@@ -62,9 +62,15 @@ function showError(error) {
     <h1 class="display-1 text-success"><span id="trackTime">00:00:00</span></h1>
     
     <div class="text-center">
+<<<<<<< HEAD
       <button name="start1" class="btn btn-lg btn-primary ps-5 pe-5" style="display:{% if btn.btn1 == True or today.exit != None %}none;{% elif btn.btn1 == False  %}; {% endif %}" onclick="make_attendance('start',{{today.exit}})" id="btnstart">Start</button>
       <button name="reset" class="btn btn-lg btn-danger ps-5 pe-5" style="display:{% if btn.btn3 == True  %}none;{% elif btn.btn3 == False %}; {% endif %}" onclick="make_attendance('stop')" id="btnstop">End</button>
       <button name="stop" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == True or today.lbreak1 != None or today.exit != None %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('break')" id="btnbreak1">Time Off</button>
+=======
+      <button name="start1" class="btn btn-lg btn-primary ps-5 pe-5" style="display:{% if btn.btn1 == True %}none;{% elif btn.btn1 == False %}; {% endif %}" onclick="make_attendance('start')" id="btnstart">Start</button>
+      <button name="reset" class="btn btn-lg btn-danger ps-5 pe-5" style="display:{% if btn.btn3 == True %}none;{% elif btn.btn3 == False %}; {% endif %}" onclick="make_attendance('stop')" id="btnstop">End</button>
+      <button name="stop" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == True %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('break')" id="btnbreak1">Time Off</button>
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
       <button name="start" class="btn btn-lg btn-warning ps-5 pe-5" style="display:{% if btn.btn2 == False %}none;{% elif btn.btn2 == False %}; {% endif %}" onclick="make_attendance('resume')" id="btnbreak2">Continue</button>
     </div>
   </div>
@@ -315,9 +321,21 @@ function showError(error) {
         $("#btnbreak1").show();
         $("#btnbreak2").hide();
         $("#breakendTime").text(time1);
+<<<<<<< HEAD
         startTimer();
       }
       if(type =='stop'){
+=======
+      }
+      if(type =='stop'){
+        time = $('#trackTime').text();
+        get_h = time.split(":")[0];
+        get_m = time.split(":")[1];
+        w_hour = get_h+':'+get_m;
+        //alert(mylocation);
+        data ={date:f_date,exit:time1,hour:w_hour,stop_location:mylocation,btn:4};
+        $("#leaveTime").text(time1);
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
        
         var isHidden = $('#btnbreak2').is(':hidden');
         if( isHidden != false)
@@ -444,6 +462,7 @@ function showError(error) {
         method: "GET",
         success: function(data){
                 console.log(data);
+<<<<<<< HEAD
                 if(data.result[0].lbreak1 != null && data.result[0].lbreak2 == null)
                 {
                   pauseTimer();
@@ -455,6 +474,15 @@ function showError(error) {
                 }
                 else{
 
+=======
+                if(data.result[0].exit == null)
+                {
+                  checkTimer(data.result[0].entry+":00")
+                }
+                if(data.result[0].lbreak1 != null && data.result[0].lbreak2 == null)
+                {
+                  pauseTimer();
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
                 }
                 
         },

@@ -5,6 +5,7 @@ from Manager.models import InitialPassword,Teams,TeamUsers,TeamLeads
 class InitialPasswordAdmin(admin.ModelAdmin):
     list_display=('id','user','first_password','first_changed')
 
+<<<<<<< HEAD
 class L_Teams(admin.ModelAdmin):
     list_display = ('name','description')
 
@@ -19,3 +20,7 @@ admin.site.register(InitialPassword,InitialPasswordAdmin)
 admin.site.register(Teams,L_Teams)
 admin.site.register(TeamLeads,L_TeamLead)
 admin.site.register(TeamUsers,L_TeamUser)
+=======
+
+admin.site.register(InitialPassword,InitialPasswordAdmin)
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06

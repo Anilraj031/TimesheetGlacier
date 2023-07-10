@@ -14,7 +14,10 @@ urlpatterns= [
     path('delete/<id>', views.DELETE, name = 'delete'),
     path('donestatus ', views.Done, name='done'),
     path('updateStatus',views.updateStatus,name='updateTicketStatus'),
+<<<<<<< HEAD
     path('addDetails', views.addComments, name= 'addComments'),
+=======
+>>>>>>> 682bbb611b2775ec604603858dc62bbe1a206d06
    
 ]
 
