@@ -6,151 +6,162 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="/static1/css/styles.css" rel="stylesheet" />
+        <title>{% block title %}Home{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="/static/css/styles.css" rel="stylesheet" />
+        <link href="/static/css/customSB.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <!--custom added for bootstrap icons-->
-        <!--end-->
-        
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         {% block script %}
-            <title>Timesheet - Leave Tracker</title>
         {% endblock %}
-        <script>
-            $(document).ready(function(){
-                is_admin = '{% if user.is_superuser %}True{% else %}False{% endif %}';
-                var mylocation = '';
-                //getLocation();
-              });
-    
-               //gte latitude and longitude
-        function getLocation() {
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(showPosition) 
-            } else { 
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-        
-        function showPosition(position) {
-          mylocation = "" + position.coords.latitude + "," + position.coords.longitude;
-      }
-
-        </script>
-    
         <style>
             
-  .btn{
-    outline: none;
-    cursor: pointer;
-    border: none;
-    display: block;
-    position: relative;
-    font-size: 16px;
-    font-weight: 200;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  /* primary button */
-  .btn-primary{
-    background-color: #0275d8;
-    box-shadow: 0 4px #052341;
-  }
-  .btn-primary:hover{
-    box-shadow: 0 2px #052341;
-    top: 2px;
-  }
-  .btn-primary:active{
-    box-shadow: 0 0 #052341;
-    top: 4px;
-  }
-  /* success button */
-  .btn-success{
-    background-color: #5cb85c;
-    box-shadow: 0 4px #1B371C;
-  }
-  .btn-success:hover{
-    box-shadow: 0 2px #1B371C;
-    top: 2px;
-  }
-  .btn-success:active{
-    box-shadow: 0 0 #1B371C;
-    top: 4px;
-  }
-  /* info button */
-  .btn-info{
-    background-color: #5bc0de;
-    box-shadow: 0 4px #1C3A42;
-  }
-  .btn-info:hover{
-    box-shadow: 0 2px #1C3A42;
-    top: 2px;
-  }
-  .btn-info:active{
-    box-shadow: 0 0 #1C3A42;
-    top: 4px;
-  }
-  /* danger button */
-  .btn-danger{
-    background-color: #d9534f;
-    box-shadow: 0 4px #2D2D2D;
-  }
-  .btn-danger:hover{
-    box-shadow: 0 2px #2D2D2D;
-    top: 2px;
-  }
-  .btn-danger:active{
-    box-shadow: 0 0 #2D2D2D;
-    top: 4px;
-  }
-  /* warning button */
-  .btn-warning{
-    background-color: #f0ad4e;
-    box-shadow: 0 4px #473317;
-  }
-  .btn-warning:hover{
-    box-shadow: 0 2px #473317;
-    top: 2px;
-  }
-  .btn-warning:active{
-    box-shadow: 0 0 #473317;
-    top: 4px;
-  }
-  /* light button */
-  .btn-light{
-    background-color: #f7f7f7;
-    box-shadow: 0 4px #4A4A4A;
-    color: #4a4a4a;
-  }
-  .btn-light:hover{
-    box-shadow: 0 2px #4A4A4A;
-    top: 2px;
-  }
-  .btn-light:active{
-    box-shadow: 0 0 #4A4A4A;
-    top: 4px;
-  }
-  /* dark button */
-  .btn-secondary{
-    background-color: #292b2c;
-    box-shadow: 0 4px #0C0D0D;
-  }
-  .btn-secondary:hover{
-    box-shadow: 0 2px #0C0D0D;
-    top: 2px;
-  }
-  .btn-secondary:active{
-    box-shadow: 0 0 #0C0D0D;
-    top: 4px;
-  }
-  
+            .dropdown-toggle:after {
+                display: none !important;
+               }
+    
+          thead{
+            background-color:aliceblue !important;
+          }
+          th{
+            font-weight:600 !important;
+            }
+          tbody tr{
+            opacity:0.8;
+            border-top:1px solid lightgray;
+            border-bottom:1px solid lightgray;
+          }
+    
+            .navbar,.sb-sidenav{
+                background-color:DodgerBlue important;
+            }
+        
+          .form-control:focus {
+            box-shadow: none !important;
+            border:1px solid lightgrey important;
+          }
+    
+          #sidebarToggle:focus {
+             box-shadow: none !important;
+             border:1px solid lightgrey !important;
+             border-radius:3px !important;
+          }
+          .btn{
+          outline: none;
+          cursor: pointer;
+          border: none !important;
+          display: block;
+          position: relative;
+          font-size: 16px ;
+          font-weight: 600 !important;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          }
+          /* primary button */
+          .btn-primary{
+          background-color: #0275d8;
+          box-shadow: 0 2px #052341;
+          }
+          .btn-primary:hover{
+          box-shadow: 0 4px #052341;
+          top: 2px;
+          }
+          .btn-primary:active{
+          box-shadow: 0 0 #052341;
+          top: 4px;
+          }
+          /* success button */
+          .btn-success{
+          background-color: #1cbb8c !important;
+          box-shadow: 0 4px #1B371C;
+          }
+          .btn-success:hover{
+          box-shadow: 0 2px #1B371C;
+          top: 2px;
+          }
+          .btn-success:active{
+          box-shadow: 0 0 #1B371C;
+          top: 4px;
+          }
+          /* info button */
+          .btn-info{
+          background-color: #5bc0de;
+          box-shadow: 0 4px #1C3A42;
+          }
+          .btn-info:hover{
+          box-shadow: 0 2px #1C3A42;
+          top: 2px;
+          }
+          .btn-info:active{
+          box-shadow: 0 0 #1C3A42;
+          top: 4px;
+          }
+          /* danger button */
+          .btn-danger{
+          background-color: #d9534f;
+          box-shadow: 0 4px #2D2D2D;
+          }
+          .btn-danger:hover{
+          box-shadow: 0 2px #2D2D2D;
+          top: 2px;
+          }
+          .btn-danger:active{
+          box-shadow: 0 0 #2D2D2D;
+          top: 4px;
+          }
+          /* warning button */
+          .btn-warning{
+          background-color: #f0ad4e;
+          box-shadow: 0 4px #473317;
+          }
+          .btn-warning:hover{
+          box-shadow: 0 2px #473317;
+          top: 2px;
+          }
+          .btn-warning:active{
+          box-shadow: 0 0 #473317;
+          top: 4px;
+          }
+          /* light button */
+          .btn-light{
+          background-color: #f7f7f7;
+          box-shadow: 0 4px #4A4A4A;
+          color: #4a4a4a;
+          }
+          .btn-light:hover{
+          box-shadow: 0 2px #4A4A4A;
+          top: 2px;
+          }
+          .btn-light:active{
+          box-shadow: 0 0 #4A4A4A;
+          top: 4px;
+          }
+          /* dark button */
+          .btn-secondary{
+          background-color: #292b2c;
+          box-shadow: 0 4px #0C0D0D;
+          }
+          .btn-secondary:hover{
+          box-shadow: 0 2px #0C0D0D;
+          top: 2px;
+          }
+          .btn-secondary:active{
+          box-shadow: 0 0 #0C0D0D;
+          top: 4px;
+          }
+          
+    
         </style>
     </head>
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <body class="sb-nav-fixed" >
+        <nav class="sb-topnav navbar navbar-expand-sm navbar-light bg-light fixed-top" style=" box-shadow: 5px 1px 5px #888888;">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="{% url 'home' %}">{{request.session.company}}</a>
+            <a class="navbar-brand ps-3 bg-light" href="{% url 'home' %}">{{request.session.company}}</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-2 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             
@@ -161,11 +172,23 @@
                     <button class="btn btn-info" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
                 </div>
             </form>
+            <!-- Nav Item - Alerts -->
+            <ul class="navbar-nav ms-auto ms-md-0 ">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fas fa-bell"></i><span class="badge badge-sm badge-danger badge-counter bg-danger rounded-circle " style="margin-left:-10px;">3</span></a>
+                    <ul class="dropdown-menu dropdown-menu-end rounded-0 mt-2" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">
+                            <i class="fas fa-bell mr-2 text-gray-400"></i>
+                            Profile
+                        </a></li>
+                    </ul>
+                </li> 
+            </ul>
             <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <ul class="navbar-nav  ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end rounded-0" aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end rounded-0 mt-2" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{% url 'userDetails' userId=user.id %}">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
@@ -188,10 +211,10 @@
         </nav>
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" >
+                    <div class="sb-sidenav-menu" >
                         <div class="nav">
-                            <a class="nav-link" href="{% url 'home' %}">
+                            <a class="nav-link mt-4" href="{% url 'home' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -200,7 +223,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Daily Log
                             </a>
-
+    
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAttendance" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Attendace
@@ -212,7 +235,7 @@
                                     <a class="nav-link" href="{% url 'leave' %}">Leave</a>
                                 </nav>
                             </div>
-
+    
                             <div class="sb-sidenav-menu-heading">Works</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -221,41 +244,11 @@
                             </a>
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="{% url 'project' %}">Projects</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
+                                    <a class="nav-link" href="{% url 'aproject' %}">Projects</a>
+                                    <a class="nav-link" href="{% url 'index' %}">Issues</a>
                                 </nav>
                             </div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                                Pages
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                        Authentication
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="login.html">Login</a>
-                                            <a class="nav-link" href="register.html">Register</a>
-                                            <a class="nav-link" href="password.html">Forgot Password</a>
-                                        </nav>
-                                    </div>
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        Error
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">401 Page</a>
-                                            <a class="nav-link" href="404.html">404 Page</a>
-                                            <a class="nav-link" href="500.html">500 Page</a>
-                                        </nav>
-                                    </div>
-                                </nav>
-                            </div>
+                            
                             <div class="sb-sidenav-menu-heading">Manage</div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -267,11 +260,11 @@
                                     {% if user.is_superuser or 'auth.view_user' in perms %}
                                     <a class="nav-link" href="{% url 'getall' %}">Users</a>
                                     <a class="nav-link" href="{% url 'company' %}">Company</a>
-                                    <a class="nav-link" href="{% url 'company' %}">Customer</a>
+                                    <a class="nav-link" href="{% url 'allcustomers' %}">Customer</a>
                                     {% endif %}
                                 </nav>
                             </div>
-
+    
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReports" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Reports
@@ -281,12 +274,10 @@
                                 <nav class="sb-sidenav-menu-nested nav">
                                     {% if user.is_superuser or perms.auth.view_user %}
                                     <a class="nav-link" href="{% url 'user_report' %}">Users</a>
-                                    <a class="nav-link" href="{% url 'company' %}">Company</a>
-                                    <a class="nav-link" href="{% url 'company' %}">Customer</a>
                                     {% endif %}
                                 </nav>
                             </div>
-
+    
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -296,15 +287,15 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main class="p-4">
+                <main class="p-5" >
                     {% block content %}
 
-                    {% endblock %}
+                {% endblock %}
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
@@ -316,91 +307,43 @@
             </div>
         </div>
 
-
-        <!-- logout modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content rounded-0">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Cancel</button>
-                        <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">Logout</a>
-                    </div>
+        
+    <!-- logout modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">Cancel</button>
+                    <a class="btn btn-danger btn-sm" href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
         </div>
-        <!-- end logout modal -->
+    </div>
+    <!-- end logout modal 
+    <script src="/static/js/demo/chart-area-demo.js"></script>
+        <script src="/static/js/demo/chart-bar-demo.js"></script>
+    -->
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="/static1/js/scripts.js"></script>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="/static/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="/static1/assets/demo/chart-area-demo.js"></script>
-        <script src="/static1/assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="/static1/js/datatables-simple-demo.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="/static/js/datatables-simple-demo.js"></script>
+
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
+        <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" ></script>
+
+        <script src="https://cdn.datatables.net/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
     </body>
 </html>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css">
-<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js" ></script>
-
-<script>
-    //code for timer
-    var save_hr='';
-    var save_min='';
-
-    let hour = 0;
-    let minute = 0;
-    let second = 0;
-    let millisecond = 0;
-
-    let cron;
-
-    function start() {
-      pause();
-      cron = setInterval(() => { timer(); }, 10);
-    }
-    
-    function pause() {
-      clearInterval(cron);
-    }
-    
-    function reset() {
-      hour = 0;
-      minute = 0;
-      second = 0;
-      millisecond = 0;
-      //document.getElementById('hour').innerText = '00';
-      //document.getElementById('minute').innerText = '00';
-      //document.getElementById('second').innerText = '00';
-    }
-    function timer() {
-      if ((millisecond += 10) == 1000) {
-        millisecond = 0;
-        second++;
-      }
-      if (second == 60) {
-        second = 0;
-        minute++;
-      }
-      if (minute == 60) {
-        minute = 0;
-        hour++;
-      }
-      //document.getElementById('hour').innerText = returnData(hour);
-      //document.getElementById('minute').innerText = returnData(minute);
-      //document.getElementById('second').innerText = returnData(second);
-      save_hr = hour;
-      save_min = minute;
-    }
-    
-    function returnData(input) {
-      return input > 10 ? input : `0${input}`
-    }
-</script>

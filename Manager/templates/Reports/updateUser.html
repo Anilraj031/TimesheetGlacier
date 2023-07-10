@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}{{users.username}} Update{% endblock %}
 {% block script %}
 <style>
     .form-control {
@@ -7,6 +8,7 @@
         border-right:0 !important;
         border-bottom:1px solid grey !important;
         border-radius: 0 !important;
+        color: grey !important;
     }
 
 
@@ -45,15 +47,7 @@
     .account-settings .about p {
         font-size: 0.825rem;
     }
-    .form-control {
-        border: 1px solid #cfd1d8;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        font-size: .825rem;
-        background: #ffffff;
-        color: #2e323c;
-    }
+    
     
     .card {
         background: #ffffff;
@@ -110,19 +104,19 @@
                             <input type="email" class="form-control" id="email" placeholder="Enter email ID" value="{{users.email}}">
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
                         <div class="form-group">
                             <label for="firstname">First Name</label>
                             <input type="text" class="form-control" id="firstname" placeholder="Enter first name" value="{{users.first_name}}">
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
                         <div class="form-group">
                             <label for="lastname">Last Name</label>
                             <input type="text" class="form-control" id="lastname" placeholder="Enter last name" value="{{users.last_name}}">
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" placeholder="Change Password" value="{{users.password}}">

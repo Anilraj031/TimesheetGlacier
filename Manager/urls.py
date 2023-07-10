@@ -8,6 +8,7 @@ urlpatterns = [
     path('update/<userId>',views.updateUser,name='updateUser'),
     path('Details/<userId>',views.viewUser,name='userDetails'),
     path('Permission/',views.addPermissions,name="permission"),
+    path('LoginType',views.updateLoginType,name="updateLoginType"),
     path('Company/',views.company,name="company"),
-    path('Report/',views.report,name='createReport')
+    path('Report/',views.report,name='createReport'),
 ]

@@ -27,6 +27,9 @@ urlpatterns = [
     path('Attendance/', include('Attendance.urls')),
     path('Manage/',include('Manager.urls')),
     path('Project/',include('Project.urls')),
-    path('Worklog/',include('emp_worklog.urls'))
+    path('Worklog/',include('emp_worklog.urls')),
+    path('Issue/',include('Issue.urls')),
+    path('Customer/',include('Customer.urls'))
+    
     
 ]

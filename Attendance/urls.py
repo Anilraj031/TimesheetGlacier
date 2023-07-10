@@ -3,7 +3,8 @@ from Attendance import views
 
 urlpatterns = [
     path('Details', views.attendance, name='attendance'),
-    path('Details/<attendance_id>', views.attendance_Details, name='a_details'),
+    path('Details/<attendance_id>', views.attendance_Details, name='a_details1'),
+    path('DetailsId', views.attendance_Details, name='a_details'),
     path('Attendance', views.make_attendance, name='makeattendance'),
     path('Leaves',views.getleave, name='leave'),
     path('RequestLeave', views.request_leave, name='requestLeave'),
@@ -15,7 +16,8 @@ urlpatterns = [
     path('updateLeave',views.updateLeave,name='updateLeave'),
     path('leaveCount',views.getLeaveCount, name='getLeaveCount'),
     path('attendanceCount',views.getattendanceCount, name='getAttendanceCount'),
-    path('hours',views.getHoursData,name="getHours"),
+    
     path('updateLeaveType',views.updateLeaveType, name="updateType"),
-    path('getLeaveType',views.getLeaveType,name="getType")
+    path('getLeaveType',views.getLeaveType,name="getType"),
+    path('getToday',views.getTodayAttendance,name='get_todays_attendance')
 ]

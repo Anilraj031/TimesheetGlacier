@@ -6,11 +6,12 @@ from django.contrib import messages
 from django.urls import reverse
 from django.http import JsonResponse
 from .models import LoggedUser,Company,Employees
-from Manager.models import InitialPassword
+from Manager.models import InitialPassword,Teams,TeamLeads,TeamUsers
 import re
 from django.contrib.auth.hashers import check_password
 from Attendance.models import LeaveType
 from django.views.decorators.csrf import csrf_exempt
+from .forms import loginForm
 # Create your views here.
 
 def sign_up(request):
@@ -30,10 +31,10 @@ def sign_up(request):
 def login_n(request):
     if not request.user.is_authenticated :
         if request.method == 'POST':
-            uname = request.POST['username']
-            upass = request.POST['password']
+            uname = request.POST.get('username')
+            upass = request.POST.get('password')
             user = authenticate(username=uname, password=upass)
-            #print(upass)
+            print(user)
             if user is not None:
                 login(request,user)
                 LoggedUser(user=request.user).save()
@@ -46,11 +47,21 @@ def login_n(request):
                         return HttpResponseRedirect(reverse('newPassword'))
                     else:
                         return HttpResponseRedirect(reverse('home'))
+            fm={
+                'username':request.POST.get('username'),
+                'password':request.POST.get('password'),
+                'error':True
+            }
             
         else:
-            fm = AuthenticationForm()
-        fm = AuthenticationForm()
-        return render(request, 'Authentication/login.html', {'form':fm})
+            fm={
+                
+            }
+            
+        context = {
+            "forms":fm
+        }
+        return render(request, 'Authentication/login.html', context)
     else:
         checkPassword = InitialPassword.objects.get(user=request.user.id)
         if checkPassword.first_changed == False:
@@ -78,7 +89,7 @@ def updatePassword(request):
         pass1 = request.POST.get('password1')
         pass2 = request.POST.get('password2')
         check = checkPassword(request,pass2)
-        print()
+        #print()
         
         if(pass1 != pass2 ):
             return JsonResponse({'result':"Password didn't matched!"})
@@ -125,7 +136,8 @@ def checkPassword(request,password):
 
 def userSetting(request):
     ltypes = LeaveType.objects.all()
-    return render(request,'Authentication/usersettings.html',{'ltypes':ltypes})
+    team = Teams.objects.all()
+    return render(request,'Authentication/usersettings.html',{'ltypes':ltypes,'teams':team})
 
 def createSession(request):
     companyid = Employees.objects.get(user=request.user)
@@ -154,5 +166,32 @@ def adminUser(request):
     else:
         User.objects.filter(id=id).update(is_superuser=False)
         return JsonResponse({'result':"Success"})
+    
+def getTeams(request,teamid):
+    team = Teams.objects.get(id=teamid)
+    members = TeamUsers.objects.filter(team =teamid)
+    return render(request,'Authentication/team.html',{'teams':team,'members':members})
 
+@csrf_exempt
+def searchUser(request):
+    user_name = request.POST.get('name')
+    print(user_name)
+    users = User.objects.filter(username__startswith=user_name).values()
+    return JsonResponse({'result':list(users)})
 
+@csrf_exempt
+def addToTeams(request):
+    userList = request.POST.getlist('userlist[]')
+    id = userList[0]
+    #print(userList)
+    userList.remove(id)
+    team = Teams.objects.get(id=id)
+    for u in userList:
+        user = User.objects.get(username=u)
+        checkUser = TeamUsers.objects.filter(team=team,user=user)
+        
+        if checkUser.exists() == False:
+            tuser = TeamUsers(team=team,user=user)
+            tuser.save()
+
+    return JsonResponse({'result':'success'})

@@ -11,5 +11,8 @@ urlpatterns = [
     path('resetpassword',views.resetPassword, name='resetPassword'),
     path('settings/',views.userSetting,name="settings"),
     path('activate/',views.activateUser,name="active"),
-    path('superuser',views.adminUser,name="admin")
+    path('superuser',views.adminUser,name="admin"),
+    path('teams/<teamid>',views.getTeams,name='teams'),
+    path('searchUsers',views.searchUser,name="searchuser"),
+    path('addUsersTeam',views.addToTeams,name='addtoteam'),
 ]
